@@ -54,10 +54,11 @@
             <div class="mt-6 flow-root">
                 <div class="-my-6 divide-y divide-gray-500/10">
                     <div class="py-6">
-                        {{ if(app.user) }}
+                        {% if app.user %}
                             <p class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Bonjour {{ app.user.name }}</p>
-                        {{ endif }}
-                        <a href="{{ path('app_login') }}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Connexion</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Connexion</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
