@@ -7,10 +7,6 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-
-    {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-    {% endblock %}
 </head>
 <body>
 
@@ -31,7 +27,11 @@
             </button>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="{{ path('app_login') }}" class="text-sm font-semibold leading-6 text-gray-900">Connexion <span aria-hidden="true">&rarr;</span></a>
+            {% if app.user %}
+                <p class="text-sm font-semibold leading-6 text-gray-900">Bonjour {{ app.user.name }}</p>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="text-sm font-semibold leading-6 text-gray-900">Connexion <span aria-hidden="true">&rarr;</span></a>
+            {% endif %}
         </div>
     </nav>
     <!-- Mobile menu, show/hide based on menu open state. -->
@@ -69,6 +69,11 @@
 <main class="container mx-auto">
     {% block body %}{% endblock %}
 </main>
+
+{% block javascripts %}
+    {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 
 </body>
 </html>
