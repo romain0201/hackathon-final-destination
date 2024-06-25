@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Téléconsultation Appel vidéo</title>
+    </head>
+    <body>
+        <video id="localVideo" autoplay playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <button id="startButton">Démarrer l'appel</button>
+        <button id="hangupButton">Raccrocher</button>
+
+        <script>
+            const localVideo = document.getElementById("localVideo");
+            const remoteVideo = document.getElementById("remoteVideo");
+            const startButton = document.getElementById("startButton");
+            const hangupButton = document.getElementById("hangupButton");
+
+            let localStream;
+            let peerConnection;
+            const socket = new WebSocket("ws://127.0.0.1:8080");
+
+            socket.onmessage = async (message) => {
+                const data = JSON.parse(message.data);
+                if (data.offer) {
+                    await peerConnection.setRemoteDescription(
+                        new RTCSessionDescription(data.offer)
+                    );
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    socket.send(JSON.stringify({ answer }));
+                } else if (data.answer) {
+                    await peerConnection.setRemoteDescription(
+                        new RTCSessionDescription(data.answer)
+                    );
+                } else if (data.candidate) {
+                    await peerConnection.addIceCandidate(
+                        new RTCIceCandidate(data.candidate)
+                    );
+                }
+            };
+
+            startButton.onclick = async () => {
+                localStream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true,
+                });
+                localVideo.srcObject = localStream;
+
+                peerConnection = new RTCPeerConnection();
+                peerConnection.addStream(localStream);
+
+                peerConnection.ontrack = (event) => {
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        socket.send(
+                            JSON.stringify({ candidate: event.candidate })
+                        );
+                    }
+                };
+
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                socket.send(JSON.stringify({ offer }));
+            };
+
+            hangupButton.onclick = () => {
+                peerConnection.close();
+                localStream.getTracks().forEach((track) => track.stop());
+                localVideo.srcObject = null;
+                remoteVideo.srcObject = null;
+            };
+        </script>
+    </body>
+</html>
