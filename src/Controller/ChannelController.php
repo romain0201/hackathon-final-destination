@@ -33,7 +33,7 @@ class ChannelController extends AbstractController
     {
         $messages = $messageRepository->findBy([
             'channel' => $channel
-        ], ['id' => 'ASC']);
+        ], ['createdAt' => 'ASC']);
 
         $discovery->addLink($request);
 
