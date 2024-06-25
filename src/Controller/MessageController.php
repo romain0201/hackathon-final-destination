@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Repository\ChannelRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -42,6 +42,9 @@ class MessageController extends AbstractController
         $message->setContent($content);
         $message->setChannel($channel);
         $message->setAuthor($this->getUser());
+        $date = new DateTime();
+        $message->setCreatedAt($date);
+        $message->setUpdatedAt($date);
 
         $em->persist($message);
         $em->flush();
@@ -51,7 +54,7 @@ class MessageController extends AbstractController
         ]);
 
         $update = new Update(
-            sprintf('https://localhost/channel/%s',
+            sprintf('https://localhost/conversation/%s',
                 $channel->getId()),
             $jsonMessage,
             true

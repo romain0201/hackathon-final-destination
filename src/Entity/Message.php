@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,12 +13,14 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
-    #[Groups(['message'])]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-    private ?Uuid $id = null;
+    #[Groups(['message'])]
+    private ?Uuid $id;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Groups(['message'])]
@@ -31,7 +34,7 @@ class Message
     #[Groups(['message'])]
     private ?Channel $channel = null;
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

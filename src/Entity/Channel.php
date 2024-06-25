@@ -13,8 +13,8 @@ use Symfony\Component\Uid\Uuid;
 class Channel
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
     private ?Uuid $id = null;
 
@@ -32,7 +32,7 @@ class Channel
         $this->messages = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }

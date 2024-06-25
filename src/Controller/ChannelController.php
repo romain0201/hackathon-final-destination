@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ChannelController extends AbstractController
 {
-    #[Route('/channel', name: 'home')]
+    #[Route('/conversations', name: 'channel')]
     public function getChannels(ChannelRepository $channelRepository): Response
     {
         $channels = $channelRepository->findAll();
@@ -23,7 +23,7 @@ class ChannelController extends AbstractController
         ]);
     }
 
-    #[Route('/channel/{id}', name: 'chat')]
+    #[Route('/conversation/{id}', name: 'chat')]
     public function chat(
         Request $request,
         Channel $channel,
@@ -39,7 +39,8 @@ class ChannelController extends AbstractController
 
         return $this->render('channel/chat.html.twig', [
             'channel' => $channel,
-            'messages' => $messages
+            'messages' => $messages,
+            'urlForMercure' => $request->getUri()
         ]);
     }
 }
