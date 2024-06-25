@@ -25,7 +25,7 @@ class TeleconsultationController extends AbstractController
         $link = $this->generateUrl('app_teleconsultation_video', ['code' => $verificationCode], true);
 
         $session->set('verification_code', $verificationCode);
-        echo $session->get('verification_code');
+        // echo $session->get('verification_code');
 
         return $this->render('teleconsultation/confirm.html.twig', [
             'link' => $link,
@@ -38,7 +38,7 @@ class TeleconsultationController extends AbstractController
     {
         $code = $request->get('code');
         $storedCode = $session->get('verification_code');
-        echo $code . ' ' . $storedCode;
+        // echo $code . ' ' . $storedCode;
 
         if ($code != $storedCode) {
             throw $this->createAccessDeniedException('Invalid verification code.');
