@@ -1,0 +1,8 @@
+{% block body %}
+<h1>Teleconsultation</h1>
+<form action="{{ path('app_teleconsultation_start') }}" method="post">
+    <label for="phone">Enter your phone number:</label>
+    <input type="text" id="phone" name="phone" required />
+    <button type="submit">Start Teleconsultation</button>
+</form>
+{% endblock %}
