@@ -6,8 +6,8 @@
     <div class="container">
         <h1 class="text-lg text-gray-900 mb-10 font-bold">Conversation client AI - {{ app.user.name }}</h1>
 
-        <div class="my-5 md:w-1/2 w-full mx-auto border border-gray-300 rounded-md p-5 max-h-[500px] overflow-auto">
-            <div class="pr-4 w-full">
+        <div class="my-5 md:w-1/2 w-full mx-auto border border-gray-300 rounded-md p-5 max-h-[500px] overflow-auto" id="messageBlockOverflow">
+            <div class="pr-4 w-full" id="messageBlock">
                 {% for message in messages %}
                     {% if app.user == message.author %}
                         <div class="flex gap-3 my-4 text-gray-600 text-sm flex-1">
@@ -40,7 +40,6 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-
             </div>
 
             <div class="flex items-center pt-0">
@@ -62,6 +61,10 @@
 {% block javascripts %}
     <script>
         let form = document.getElementById('form');
+
+        const messagesContainerOverflow = document.getElementById('messageBlockOverflow');
+        messagesContainerOverflow.scrollTop = messagesContainerOverflow.scrollHeight;
+
         function handleForm(event) {
             event.preventDefault();
         }
@@ -91,7 +94,7 @@
         eventSource.onmessage = event => {
             const data = JSON.parse(event.data);
             const isUserMessage = {{ app.user.id }} === data.author.id;
-            const messagesContainer = document.querySelector('.pr-4');
+            const messagesContainer = document.getElementById('messageBlock');
 
             const messageElement = document.createElement('div');
             messageElement.classList.add('flex', 'gap-3', 'my-4', 'text-gray-600', 'text-sm', 'flex-1');
@@ -128,7 +131,7 @@
             }
 
             messagesContainer.appendChild(messageElement);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            messagesContainerOverflow.scrollTop = messagesContainerOverflow.scrollHeight;
         };
     </script>
 {% endblock %}
