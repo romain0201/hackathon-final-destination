@@ -27,7 +27,7 @@ class HomeController extends AbstractController
     #[Route('/send-sms', name: 'send_sms')]
     public function sendSms(): Response
     {
-        $to = '+33605599873';
+        $to = '+33604444761';
         $body = 'test challenge';
 
         try {
