@@ -7,6 +7,7 @@ parameters:
 
 services:
     # default configuration for services in *this* file
+    
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
@@ -19,6 +20,10 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
+    App\Service\TwilioService:
+        arguments:
+            $sid: '%env(TWILIO_SID)%'
+            $authToken: '%env(TWILIO_AUTH_TOKEN)%'
+            $from: '%env(TWILIO_PHONE_NUMBER)%'
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
