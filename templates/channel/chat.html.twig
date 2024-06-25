@@ -90,8 +90,7 @@
         });
         eventSource.onmessage = event => {
             const data = JSON.parse(event.data);
-            console.log(data.author.id)
-            const isUserMessage = {{ app.user }} === data.author;
+            const isUserMessage = {{ app.user.id }} === data.author.id;
             const messagesContainer = document.querySelector('.pr-4');
 
             const messageElement = document.createElement('div');
