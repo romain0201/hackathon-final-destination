@@ -1,5 +1,48 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A blanditiis culpa delectus ex laudantium maxime molestias nobis placeat quod, tempora. Cupiditate debitis dicta exercitationem facere fuga, minus quam? Aperiam, non.
+	<div class="flex flex-col gap-8">
+		<div class="flex items-center justify-between bg-white">
+			<div class="flex items-end gap-6">
+				<img src="{{ asset('icons/download.svg') }}" alt="Download Icon" class="w-10">
+				<div class="flex items-center gap-2">
+					<button class="bg-orange-500 text-white py-2 px-4 rounded flex items-center">
+						<img src="{{ asset('icons/add-user.svg') }}" alt="Enroll Icon" class=" w-8">
+						Enrôler un patient
+					</button>
+					<button class="bg-gray-200 text-black py-2 px-4 rounded flex items-center">
+						<img src="{{ asset('icons/file.svg') }}" alt="Upload Icon" class=" w-8">
+						Importer un fichier
+					</button>
+				</div>
+			</div>
+			<div class="flex items-center gap-1">
+				<img src="{{ asset('icons/help.svg') }}" alt="Help Icon" class="w-3">
+				<select class="w-52 bg-white border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-1.5">
+					<option selected>Test PX</option>
+				</select>
+			</div>
+		</div>
+		<div class="flex flex-col gap-3">
+			<div class="bg-white">
+				<nav class="flex space-x-4 border-b">
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">Réponses Memoquest</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border border-b-white rounded-t-lg text-gray-700">Tous</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J-5</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J-2</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J-1</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J0</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J+1</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J+4</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J+7</a>
+					<a href="#" class="py-2 px-4 text-gray-600 border-b-2 border-transparent text-cyan-700">J+2000</a>
+				</nav>
+			</div>
+			{% include 'partials/_patients_table.html.twig' %}
+			<div class="self-end flex flex-col items-center">
+				<img class="hidden lg:block w-40 " src="{{ asset('images/calmedica-logo.png') }}" alt="Calmedica Logo">
+				<p class="text-[8px] text-gray-600">Mettre la e-santé à la portée de tous</p>
+			</div>
+		</div>
+	</div>
 {% endblock %}
