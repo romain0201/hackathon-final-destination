@@ -75,7 +75,7 @@
             const message = document.getElementById('message');
             const data = {
                 'content': message.value,
-                'channel': {{ channel.id }}
+                'channel': "{{ channel.id }}",
             };
             fetch('/message', {
                 method: 'POST',
@@ -88,7 +88,7 @@
             });
         };
 
-        const eventSource = new EventSource("{{ mercure('https://localhost/channel/1', { subscribe: 'https://localhost/channel/1' })|escape('js') }}", {
+        const eventSource = new EventSource("{{ mercure(urlForMercure, { subscribe: urlForMercure })|escape('js') }}", {
             withCredentials: true
         });
         eventSource.onmessage = event => {
