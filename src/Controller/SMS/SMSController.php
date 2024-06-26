@@ -44,7 +44,7 @@ class SMSController extends AbstractController
         ";
 
         try {
-            $sid = $this->twilioService->sendSms($to, $body);
+            $this->twilioService->sendSms($to, $body);
             return $this->redirectToRoute('chat', ['id' => $channelId]);
         } catch (\Exception $e) {
             return new Response("Error: " . $e->getMessage());
