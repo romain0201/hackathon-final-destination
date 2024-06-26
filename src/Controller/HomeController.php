@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\OllamaClient;
 use App\Service\TwilioService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,12 +15,22 @@ class HomeController extends AbstractController
     public function __construct(TwilioService $twilioService)
     {
         $this->twilioService = $twilioService;
+        $this->ollamaClient = new OllamaClient();
+
     }
 
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
         return $this->render('front/home/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/admin/', name: 'app_admin_home')]
+    public function indexAdmin(): Response
+    {
+        return $this->render('back/home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);
     }
@@ -38,4 +49,18 @@ class HomeController extends AbstractController
         }
     }
 
+    #[Route('/ask-mistral', name: 'mistral')]
+    public function askMistral(): Response
+    {
+        $input = "presentez-vous svp je connais pas";
+
+        try {
+            $response = $this->ollamaClient->getResponse($input);
+        } catch (\Exception $e) {
+            return new Response("Erreur: " . $e->getMessage());
+        }
+        var_dump($response);
+        return new Response("Réponse de l'API: " . json_encode($response));
+
+    }
 }
