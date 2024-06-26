@@ -71,10 +71,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone = null;
 
+    /**
+     * @var Collection<int, Symptom>
+     */
+    #[ORM\ManyToMany(targetEntity: Symptom::class, mappedBy: 'patient')]
+    private Collection $symptoms;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->channels = new ArrayCollection();
+        $this->symptoms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -232,6 +239,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Symptom>
+     */
+    public function getSymptoms(): Collection
+    {
+        return $this->symptoms;
+    }
+
+    public function addSymptom(Symptom $symptom): static
+    {
+        if (!$this->symptoms->contains($symptom)) {
+            $this->symptoms->add($symptom);
+            $symptom->addPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSymptom(Symptom $symptom): static
+    {
+        if ($this->symptoms->removeElement($symptom)) {
+            $symptom->removePatient($this);
+        }
 
         return $this;
     }
