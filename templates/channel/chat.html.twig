@@ -4,7 +4,8 @@
 
 {% block body %}
     <div class="container">
-        <h1 class="text-lg text-gray-900 mb-10 font-bold">Conversation client AI - {{ app.user.name }}</h1>
+        <h1 class="text-lg text-gray-900 mb-2 font-bold">{{ channel.name }}</h1>
+        <p class="mb-10 text-gray-400 italic text-sm">Cet échange est généré par intelligence artificielle. <br> En cas d'urgence, merci de contacter directement un service officiel tel que le SAMU (15) ou les pompiers (18).</p>
 
         <div class="my-5 md:w-1/2 w-full mx-auto border border-gray-300 rounded-md p-5 max-h-[500px] overflow-auto" id="messageBlockOverflow">
             <div class="pr-4 w-full" id="messageBlock">
