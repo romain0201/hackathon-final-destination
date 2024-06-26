@@ -1,21 +1,19 @@
 {% extends 'base_front.html.twig' %} {% block body %}
 <div class="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg mt-10">
-    <h1 class="text-2xl font-bold mb-6 text-center">
-        Démarrer une Téléconsultation
-    </h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">Vérification du Code</h1>
     <form
-        action="{{ path('app_teleconsultation_demarrer') }}"
+        action="{{ path('app_teleconsultation_verification') }}"
         method="post"
         class="space-y-4"
     >
         <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700"
-                >Entrez le numéro de téléphone du patient :</label
+            <label for="code" class="block text-sm font-medium text-gray-700"
+                >Entrez le code OTP reçu par SMS :</label
             >
             <input
                 type="text"
-                id="phone"
-                name="phone"
+                id="code"
+                name="code"
                 required
                 class="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
@@ -25,7 +23,7 @@
                 type="submit"
                 class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
             >
-                Lancer la Téléconsultation
+                Vérifier
             </button>
         </div>
     </form>
