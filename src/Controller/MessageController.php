@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Repository\ChannelRepository;
+use App\Repository\MessageRepository;
 use App\Repository\UserRepository;
 use App\Service\OllamaClient;
 use DateTime;
@@ -80,6 +81,7 @@ class MessageController extends AbstractController
     #[Route('/message-ia', name: 'message-ia', methods: ['POST'])]
     public function askMistral(Request $request,
                                ChannelRepository $channelRepository,
+                               MessageRepository $messageRepository,
                                UserRepository $userRepository,
                                SerializerInterface $serializer,
                                EntityManagerInterface $em,
@@ -97,8 +99,21 @@ class MessageController extends AbstractController
             throw new AccessDeniedHttpException('Message have to be sent on a specific channel');
         }
 
+        $previousMessages = $messageRepository->findBy(['channel' => $channel]);
+        $previousMessagesFormatForIA = null;
+
+        foreach ($previousMessages as $previousMessage) {
+            if ($previousMessage->getAuthor()->getId() === 5)
+                $previousMessagesFormatForIA .= "IA : " . $previousMessage->getContent();
+            else $previousMessagesFormatForIA .= "USER : " . $previousMessage->getContent();
+        }
+
+        $messageForIa = "Voici la liste des précédents échanges entre toi (l'IA) et l'utilisateur (USER). Tu vas t'en servir au fur et à mesure de la conversation pour répondre à l'utilisateur. Voici la liste de message précédents = "
+            . $previousMessagesFormatForIA . ". Depuis cette échange, répond à la question suivante : " . $content;
+
         try {
-            $content = $this->ollamaClient->getResponse($content);
+            $content = $this->ollamaClient->getResponse($messageForIa);
+            $this->ollamaClient->
         } catch (\Exception $e) {
             return new Response("Erreur: " . $e->getMessage());
         }
