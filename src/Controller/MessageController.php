@@ -113,7 +113,6 @@ class MessageController extends AbstractController
 
         try {
             $content = $this->ollamaClient->getResponse($messageForIa);
-            $this->ollamaClient->
         } catch (\Exception $e) {
             return new Response("Erreur: " . $e->getMessage());
         }
