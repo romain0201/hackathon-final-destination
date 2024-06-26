@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Traits;
 
 use Gedmo\Mapping\Annotation\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
