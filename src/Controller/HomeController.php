@@ -43,20 +43,6 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/send-sms', name: 'send_sms')]
-    public function sendSms(): Response
-    {
-        $to = '+33604444761';
-        $body = 'test challenge';
-
-        try {
-            $sid = $this->twilioService->sendSms($to, $body);
-            return new Response("Message sent with SID: $sid");
-        } catch (\Exception $e) {
-            return new Response("Error: " . $e->getMessage());
-        }
-    }
-
     #[Route('/ask-mistral', name: 'mistral')]
     public function askMistral(): Response
     {
