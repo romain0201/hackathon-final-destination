@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use App\Service\OllamaClient;
 use App\Service\TwilioService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,10 +29,17 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/', name: 'app_admin_home')]
-    public function indexAdmin(): Response
+    public function indexAdmin(UserRepository $userRepository): Response
     {
+        $users = $userRepository->findAll();
+        $patient = [];
+
+        foreach ($users as $user)
+            if (in_array('ROLE_PATIENT', $user->getRoles()))
+                $patient[] = $user;
+
         return $this->render('back/home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'users' => $patient,
         ]);
     }
 

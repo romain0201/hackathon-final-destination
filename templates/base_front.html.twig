@@ -51,17 +51,23 @@
                         </svg>
                     </button>
                 </div>
-                <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+                <div class="hidden lg:flex lg:flex-1 items-center lg:justify-end">
                     {% if app.user %}
-                    <p class="text-sm font-semibold leading-6 text-gray-900">
-                        Bonjour {{ app.user.name }}
-                    </p>
-                    <a
-                        href="{{ path('app_logout') }}"
-                        class="text-sm font-semibold leading-6 text-gray-900 ml-3"
-                    >
-                        déconnexion
-                    </a>
+                        <p class="text-sm font-semibold leading-6 text-gray-900">
+                            Bonjour {{ app.user.name }}
+                        </p>
+                        <a
+                            href=""
+                            class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                        >
+                            Mes conversations
+                        </a>
+                        <a
+                            href="{{ path('app_logout') }}"
+                            class="text-sm font-semibold leading-6 ml-3 bg-amber-500 rounded-md px-3 py-1.5 text-white"
+                        >
+                            Déconnexion
+                        </a>
                     {% else %}
                     <a
                         href="{{ path('app_login') }}"

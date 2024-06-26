@@ -27,6 +27,12 @@ class Channel
     #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'channel')]
     private Collection $messages;
 
+    #[ORM\ManyToOne(inversedBy: 'channels')]
+    private ?User $medicine = null;
+
+    #[ORM\ManyToOne(inversedBy: 'channels')]
+    private ?User $patient = null;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -75,6 +81,30 @@ class Channel
                 $message->setChannel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMedicine(): ?User
+    {
+        return $this->medicine;
+    }
+
+    public function setMedicine(?User $medicine): static
+    {
+        $this->medicine = $medicine;
+
+        return $this;
+    }
+
+    public function getPatient(): ?User
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?User $patient): static
+    {
+        $this->patient = $patient;
 
         return $this;
     }
