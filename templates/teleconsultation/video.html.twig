@@ -1,0 +1,104 @@
+{% extends 'base_front.html.twig' %} {% block body %}
+<section class="flex items-center justify-center pt-15">
+    <div class="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold mb-4 text-center">Téléconsultation</h1>
+        <div
+            class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4"
+        >
+            <div class="w-full md:w-1/2">
+                <video
+                    id="localVideo"
+                    autoplay
+                    playsinline
+                    class="w-full rounded-md shadow"
+                ></video>
+            </div>
+            <div class="w-full md:w-1/2">
+                <video
+                    id="remoteVideo"
+                    autoplay
+                    playsinline
+                    class="w-full rounded-md shadow"
+                ></video>
+            </div>
+        </div>
+        <div class="mt-6 flex justify-center space-x-4">
+            <button
+                id="startButton"
+                class="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none"
+            >
+                Démarrer l'appel
+            </button>
+            <button
+                id="hangupButton"
+                class="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none"
+            >
+                Raccrocher
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    const localVideo = document.getElementById("localVideo");
+    const remoteVideo = document.getElementById("remoteVideo");
+    const startButton = document.getElementById("startButton");
+    const hangupButton = document.getElementById("hangupButton");
+
+    let localStream;
+    let peerConnection;
+    const socket = new WebSocket("ws://127.0.0.1:8080");
+
+    socket.onmessage = async (message) => {
+        const data = JSON.parse(message.data);
+        if (data.offer) {
+            await peerConnection.setRemoteDescription(
+                new RTCSessionDescription(data.offer)
+            );
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.send(JSON.stringify({ answer }));
+        } else if (data.answer) {
+            await peerConnection.setRemoteDescription(
+                new RTCSessionDescription(data.answer)
+            );
+        } else if (data.candidate) {
+            await peerConnection.addIceCandidate(
+                new RTCIceCandidate(data.candidate)
+            );
+        }
+    };
+
+    startButton.onclick = async () => {
+        localStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+        });
+        localVideo.srcObject = localStream;
+
+        peerConnection = new RTCPeerConnection();
+        peerConnection.addStream(localStream);
+
+        peerConnection.ontrack = (event) => {
+            remoteVideo.srcObject = event.streams[0];
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                socket.send(JSON.stringify({ candidate: event.candidate }));
+            }
+        };
+
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+        socket.send(JSON.stringify({ offer }));
+    };
+
+    hangupButton.onclick = () => {
+        peerConnection.close();
+        localStream.getTracks().forEach((track) => track.stop());
+        localVideo.srcObject = null;
+        remoteVideo.srcObject = null;
+    };
+</script>
+{% endblock %}
