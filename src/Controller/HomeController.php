@@ -27,6 +27,14 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/', name: 'app_admin_home')]
+    public function indexAdmin(): Response
+    {
+        return $this->render('back/home/index.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
     #[Route('/send-sms', name: 'send_sms')]
     public function sendSms(): Response
     {
