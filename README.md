@@ -49,3 +49,23 @@ Symfony Docker is available under the MIT License.
 ## Credits
 
 Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+
+## Setup Mistral
+
+### Étapes d'installation
+
+1. **Télécharger Ollama :**
+
+Depuis repo github : https://github.com/ollama/ollama
+
+2**Recuperer l'image de mistral :**
+
+```bash
+ollama pull mistral
+```
+
+3**Facultatif - Lancer mistral en terminal :**
+
+```bash
+ollama run mistral
+```

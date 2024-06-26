@@ -1,0 +1,185 @@
+<div class="flex items-center justify-between">
+	<div class="flex items-center gap-1 font-semibold text-black">
+		<label for="items-per-page">Afficher</label>
+		<select id="items-per-page" class="text-sm border border-gray-300 rounded">
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="100" selected>100</option>
+		</select>
+		<span>éléments</span>
+	</div>
+	<div>
+		<input type="text" placeholder="Rechercher" class="border border-2 border-black w-52 placeholder-gray-500 font-semibold">
+	</div>
+</div>
+<div class="overflow-x-auto pb-2">
+	<table class="min-w-full divide-y-2 divide-zinc-400 table-auto">
+		<thead class="">
+			<tr>
+				<th scope="col" class="pl-1 pr-4">
+					<div class="flex items-center">
+						<input id="checkbox-all" type="checkbox" class="w-3 h-43 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
+						<label for="checkbox-all" class="sr-only">checkbox</label>
+					</div>
+				</th>
+				<th scope="col"></th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Etape
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Protocole
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Tél Portable
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Suivi SMS
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Date de référence
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Etat
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Numéro d'opération
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Nom
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Prénom
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					ipp
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Date de naissance
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Médecin
+				</th>
+				<th scope="col" class="p-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Intervention/Examen
+				</th>
+				<th scope="col" class="px-1 text-xs font-medium tracking-wider text-left text-gray-700 whitespace-nowrap">
+					Durée intervention (en mins)
+				</th>
+			</tr>
+		</thead>
+		<tbody class="bg-white divide-y divide-gray-200">
+			<tr class="hover:bg-gray-100 bg-zinc-50">
+				<td class="pl-1 pr-4 w-4">
+					<div class="flex items-center">
+						<input id="checkbox-table-1" type="checkbox" class="w-3 h-3 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
+						<label for="checkbox-table-1" class="sr-only">checkbox</label>
+					</div>
+				</td>
+				<td class="px-1">
+					<div class="p-1 flex items-center justify-center gap-1 w-48">
+						<img src="{{ asset('icons/trash.svg') }}" alt="Trash icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pen.svg') }}" alt="Pen icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pause.svg') }}" alt="Pause icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/play.svg') }}" alt="Play icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/download.svg') }}" alt="Download icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/eye.svg') }}" alt="Eye icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/image.svg') }}" alt="Image icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/hourglass.svg') }}" alt="Hourglass icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/info.svg') }}" alt="Info icon" class="h-[18px] w-[18px]">
+					</div>
+				</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">J+1</td>
+				<td class="px-1 text-sm font-medium text-gray-500 whitespace-nowrap">Test Classique</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">07 89 71 49 59</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">OK</td>
+				<td class="px-1 text-sm font-medium text-orange-400 whitespace-nowrap">24/06/2024 07:00:00</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Actif</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">0967656767</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">25/06/2024</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+			</tr>
+			<tr class="hover:bg-gray-100">
+				<td class="pl-1 pr-4 w-4">
+					<div class="flex items-center">
+						<input id="checkbox-table-1" type="checkbox" class="w-3 h-3 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
+						<label for="checkbox-table-1" class="sr-only">checkbox</label>
+					</div>
+				</td>
+				<td class="px-1">
+					<div class="p-1 flex items-center justify-center gap-1 w-48">
+						<img src="{{ asset('icons/trash.svg') }}" alt="Trash icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pen.svg') }}" alt="Pen icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pause.svg') }}" alt="Pause icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/play.svg') }}" alt="Play icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/download.svg') }}" alt="Download icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/eye.svg') }}" alt="Eye icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/image.svg') }}" alt="Image icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/hourglass.svg') }}" alt="Hourglass icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/info.svg') }}" alt="Info icon" class="h-[18px] w-[18px]">
+					</div>
+				</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">J+1</td>
+				<td class="px-1 text-sm font-medium text-gray-500 whitespace-nowrap">Test Classique</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">07 89 71 49 59</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">OK</td>
+				<td class="px-1 text-sm font-medium text-orange-400 whitespace-nowrap">24/06/2024 07:00:00</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Actif</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">0967656767</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">25/06/2024</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+			</tr>
+			<tr class="hover:bg-gray-100 bg-zinc-50">
+				<td class="pl-1 pr-4 w-4">
+					<div class="flex items-center">
+						<input id="checkbox-table-1" type="checkbox" class="w-3 h-3 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2">
+						<label for="checkbox-table-1" class="sr-only">checkbox</label>
+					</div>
+				</td>
+				<td class="px-1">
+					<div class="p-1 flex items-center justify-center gap-1 w-48">
+						<img src="{{ asset('icons/trash.svg') }}" alt="Trash icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pen.svg') }}" alt="Pen icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/pause.svg') }}" alt="Pause icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/play.svg') }}" alt="Play icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/download.svg') }}" alt="Download icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/eye.svg') }}" alt="Eye icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/image.svg') }}" alt="Image icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/hourglass.svg') }}" alt="Hourglass icon" class="h-[18px] w-[18px]">
+						<img src="{{ asset('icons/info.svg') }}" alt="Info icon" class="h-[18px] w-[18px]">
+					</div>
+				</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">J+1</td>
+				<td class="px-1 text-sm font-medium text-gray-500 whitespace-nowrap">Test Classique</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">07 89 71 49 59</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">OK</td>
+				<td class="px-1 text-sm font-medium text-orange-400 whitespace-nowrap">24/06/2024 07:00:00</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Actif</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">0967656767</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">Thom</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap">25/06/2024</td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+				<td class="px-1 text-sm font-medium text-gray-900 whitespace-nowrap"></td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+<div class="flex items-center justify-between gap-4 self-end">
+	<div class="text-gray-500">Précédent</div>
+	<div class="text-gray-500 border border-gray-400 py-1 px-3 bg-gray-50">1</div>
+	<div class="text-gray-500">Suivant</div>
+</div>
