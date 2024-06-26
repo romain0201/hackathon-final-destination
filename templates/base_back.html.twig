@@ -1,18 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Hackathon{% endblock %}</title>
+    <title>
+        {% block title %}Admin Hackathon
+        {% endblock %}
+    </title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {% block javascripts %}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-    {% endblock %}
-
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+<header class="h-16 bg-zinc-800 text-white p-4 flex justify-between items-center ">
+    <div class="flex items-center gap-8">
+        <img class="hidden lg:block w-52" src="{{ asset('images/calmedica-logo.png') }}" alt="Calmedica Logo">
+        <div class="flex items-center gap-1.5">
+            <p>Aide</p>
+            <img src="{{ asset('icons/caret.svg') }}" alt="Help" class="w-2 h-2">
+        </div>
+    </div>
+    <div class="flex items-center">
+        <nav>
+            <ul class="flex items-center gap-8">
+                <li>
+                    <a href="#" class="{{ app.request.attributes.get('_route') == 'app_home' ? 'text-orange-500' : '' }}">Afficher les patients</a>
+                </li>
+                <li>
+                    <a href="#" class="{{ app.request.attributes.get('_route') == 'app_waitlist' ? 'text-orange-500' : '' }}">Liste d'attente</a>
+                </li>
+                <li>
+                    <a href="#" class="{{ app.request.attributes.get('_route') == 'app_report' ? 'text-orange-500' : '' }}">Rapport</a>
+                </li>
+                <li>
+                    <a href="#" class="{{ app.request.attributes.get('_route') == 'app_dashboard' ? 'text-orange-500' : '' }}">Tableau de bord</a>
+                </li>
+                <li>
+                    <a href="#" class="{{ app.request.attributes.get('_route') == 'app_authorizations' ? 'text-orange-500' : '' }}">Autorisations</a>
+                </li>
+            </ul>
+        </nav>
+        <div class="flex items-center gap-1.5 ml-6">
+            <img src="{{ asset('icons/settings.svg') }}" alt="Settings" class="w-5 h-5">
+            <img src="{{ asset('icons/caret.svg') }}" alt="Help" class="w-2 h-2">
+        </div>
+    </div>
+</header>
+
+<main class="container pt-8 pb-4 px-4">
+    {% block body %}{% endblock %}
+</main>
+
 </body>
 </html>
