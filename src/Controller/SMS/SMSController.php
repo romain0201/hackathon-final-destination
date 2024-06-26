@@ -62,7 +62,7 @@ class SMSController extends AbstractController
         }
 
         $message = new Message();
-        $message->setAuthor($userRepository->find(5));
+        $message->setAuthor($userRepository->find(1));
         $message->setContent($iaResponse["response"]);
         $message->setChannel($channel);
 

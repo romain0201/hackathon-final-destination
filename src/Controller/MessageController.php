@@ -103,7 +103,7 @@ class MessageController extends AbstractController
         $previousMessagesFormatForIA = null;
 
         foreach ($previousMessages as $previousMessage) {
-            if ($previousMessage->getAuthor()->getId() === 5)
+            if ($previousMessage->getAuthor()->getId() === 1)
                 $previousMessagesFormatForIA .= "IA : " . $previousMessage->getContent();
             else $previousMessagesFormatForIA .= "USER : " . $previousMessage->getContent();
         }
@@ -120,7 +120,7 @@ class MessageController extends AbstractController
         $message = new Message();
         $message->setContent($content["response"]);
         $message->setChannel($channel);
-        $message->setAuthor($userRepository->find(5));
+        $message->setAuthor($userRepository->find(1));
         $date = new DateTime();
         $message->setCreatedAt($date);
         $message->setUpdatedAt($date);
