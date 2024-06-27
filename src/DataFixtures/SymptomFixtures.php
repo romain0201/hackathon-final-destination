@@ -21,7 +21,15 @@ class SymptomFixtures extends Fixture implements DependentFixtureInterface
             'Nausée',
             'Fatigue',
             'Essoufflement',
-            'Éruption cutanée'
+            'Éruption cutanée',
+            'Inquiétude',
+            'Stress',
+            'Anxiété',
+            'Tristesse',
+            'Suicidaire',
+            'Malheureux',
+            'Seul',
+            'Déprimé',
         ];
 
         foreach ($symptomNames as $name) {
