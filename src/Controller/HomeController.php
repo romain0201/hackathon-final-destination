@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
-use App\Service\OllamaClient;
-use App\Service\TwilioService;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,7 +19,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/', name: 'app_admin_home')]
-    public function indexAdmin(UserRepository $userRepository): Response
+    public function indexAdmin(Request $request, UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
         $patient = [];
@@ -31,6 +30,7 @@ class HomeController extends AbstractController
 
         return $this->render('back/home/index.html.twig', [
             'users' => $patient,
+            'urlForMercure' => $request->getUri() . 'symptomAfterAnalyse'
         ]);
     }
 }
