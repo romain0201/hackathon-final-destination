@@ -79,6 +79,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['symptom'])]
     private Collection $symptoms;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $odp = null;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
@@ -268,6 +271,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->symptoms->removeElement($symptom)) {
             $symptom->removePatient($this);
         }
+
+        return $this;
+    }
+
+    public function getOdp(): ?string
+    {
+        return $this->odp;
+    }
+
+    public function setOdp(?string $odp): static
+    {
+        $this->odp = $odp;
 
         return $this;
     }
