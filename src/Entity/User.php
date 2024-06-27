@@ -77,11 +77,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Symptom::class, mappedBy: 'patient')]
     private Collection $symptoms;
 
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
+    private Collection $orders;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->channels = new ArrayCollection();
         $this->symptoms = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -265,6 +272,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->symptoms->removeElement($symptom)) {
             $symptom->removePatient($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getClient() === $this) {
+                $order->setClient(null);
+            }
         }
 
         return $this;

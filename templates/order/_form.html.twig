@@ -1,0 +1,115 @@
+{{ form_start(form) }}
+
+    {{ form_row(form.created_at) }}
+    {{ form_row(form.preparation_date) }}
+    {{ form_row(form.file) }}
+    {{ form_widget(form.orderItems) }}
+
+<div>
+    <label for="client">Client</label>
+    <select id="client" name="order[client]" class="form-control">
+        {% for client in clients %}
+            <option value="{{ client.id }}">{{ client.email }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div>
+    <label for="pharmacy">Pharmacy</label>
+    <select id="pharmacy" name="order[pharmacy]" class="form-control">
+        {% for pharmacy in pharmacies %}
+            <option value="{{ pharmacy.id }}">{{ pharmacy.email }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div id="order-items-list">
+    <div class="order-item">
+        <div>
+            <label class="required">Medicament</label>
+            <input type="text" class="form-control medicament" required>
+        </div>
+        <div>
+            <label class="required">Quantity</label>
+            <input type="number" class="form-control quantity" required>
+        </div>
+        <div>
+            <label class="required">Description</label>
+            <input type="text" class="form-control description" required>
+        </div>
+        <button type="button" class="remove-order-item btn btn-danger">Remove</button>
+    </div>
+</div>
+
+<button type="button" id="add-order-item" class="btn btn-secondary">Add another item</button>
+
+<button type="submit" class="btn btn-primary">Save</button>
+
+{{ form_end(form) }}
+
+<a href="{{ path('app_order_index') }}">back to list</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderItemsList = document.getElementById('order-items-list');
+        var addOrderItemButton = document.getElementById('add-order-item');
+        var orderItemsField = document.getElementById('{{ form.orderItems.vars.id }}');
+        var form = document.querySelector('form');
+        var index = 1; // Start index from 1 since one item is already added
+
+        addOrderItemButton.addEventListener('click', function() {
+            var newItemHtml = `
+                    <div class="order-item">
+                        <div>
+                            <label class="required">Medicament</label>
+                            <input type="text" class="form-control medicament" required>
+                        </div>
+                        <div>
+                            <label class="required">Quantity</label>
+                            <input type="number" class="form-control quantity" required>
+                        </div>
+                        <div>
+                            <label class="required">Description</label>
+                            <input type="text" class="form-control description" required>
+                        </div>
+                        <button type="button" class="remove-order-item btn btn-danger">Remove</button>
+                    </div>
+                `;
+            index++;
+
+            var newItem = document.createElement('div');
+            newItem.innerHTML = newItemHtml;
+            orderItemsList.appendChild(newItem);
+
+            newItem.querySelector('.remove-order-item').addEventListener('click', function() {
+                orderItemsList.removeChild(newItem);
+                updateOrderItemsField();
+            });
+
+            updateOrderItemsField();
+        });
+
+        function updateOrderItemsField() {
+            var items = [];
+            document.querySelectorAll('.order-item').forEach(function(item) {
+                var medicament = item.querySelector('.medicament').value;
+                var quantity = item.querySelector('.quantity').value;
+                var description = item.querySelector('.description').value;
+                items.push({ medicament: medicament, quantity: quantity, description: description });
+            });
+            orderItemsField.value = JSON.stringify(items);
+        }
+
+        form.addEventListener('submit', function(event) {
+            updateOrderItemsField();
+        });
+
+        document.querySelectorAll('.remove-order-item').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var item = button.closest('.order-item');
+                orderItemsList.removeChild(item);
+                updateOrderItemsField();
+            });
+        });
+    });
+</script>
