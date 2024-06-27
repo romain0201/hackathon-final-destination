@@ -20,15 +20,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['message'])]
+    #[Groups(['message', 'symptom'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['message'])]
+    #[Groups(['message', 'symptom'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['message'])]
+    #[Groups(['message', 'symptom'])]
     private ?string $name = null;
 
     public function getName(): ?string
@@ -54,6 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column]
+    #[Groups(['symptom'])]
     private bool $isVerified = true;
 
     /**
@@ -75,7 +76,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var Collection<int, Symptom>
      */
     #[ORM\ManyToMany(targetEntity: Symptom::class, mappedBy: 'patient')]
+    #[Groups(['symptom'])]
     private Collection $symptoms;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $odp = null;
 
     public function __construct()
     {
@@ -266,6 +271,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->symptoms->removeElement($symptom)) {
             $symptom->removePatient($this);
         }
+
+        return $this;
+    }
+
+    public function getOdp(): ?string
+    {
+        return $this->odp;
+    }
+
+    public function setOdp(?string $odp): static
+    {
+        $this->odp = $odp;
 
         return $this;
     }
