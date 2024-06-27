@@ -98,6 +98,8 @@ class MessageController extends AbstractController
             throw new AccessDeniedHttpException('Message have to be sent on a specific channel');
         }
 
+        if (!$channel->isLock()) return false;
+
         $previousMessages = $messageRepository->findBy(['channel' => $channel]);
         $previousMessagesFormatForIA = null;
 
