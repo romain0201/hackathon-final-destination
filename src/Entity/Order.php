@@ -32,6 +32,9 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $file = "";
 
+    #[ORM\Column(length: 255)]
+    private ?string $doctor = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -110,6 +113,18 @@ class Order
     public function setFile(string $file): static
     {
         $this->file = $file;
+
+        return $this;
+    }
+
+    public function getDoctor(): ?string
+    {
+        return $this->doctor;
+    }
+
+    public function setDoctor(string $doctor): static
+    {
+        $this->doctor = $doctor;
 
         return $this;
     }

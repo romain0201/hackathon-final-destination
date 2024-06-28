@@ -1,27 +1,12 @@
 {{ form_start(form) }}
 
+    {{ form_row(form.doctor) }}
     {{ form_row(form.created_at) }}
     {{ form_row(form.preparation_date) }}
+    {{ form_row(form.client) }}
+    {{ form_row(form.pharmacy) }}
     {{ form_row(form.file) }}
     {{ form_widget(form.orderItems) }}
-
-<div>
-    <label for="client">Client</label>
-    <select id="client" name="order[client]" class="form-control">
-        {% for client in clients %}
-            <option value="{{ client.id }}">{{ client.email }}</option>
-        {% endfor %}
-    </select>
-</div>
-
-<div>
-    <label for="pharmacy">Pharmacy</label>
-    <select id="pharmacy" name="order[pharmacy]" class="form-control">
-        {% for pharmacy in pharmacies %}
-            <option value="{{ pharmacy.id }}">{{ pharmacy.email }}</option>
-        {% endfor %}
-    </select>
-</div>
 
 <div id="order-items-list">
     <div class="order-item">
