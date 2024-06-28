@@ -38,6 +38,9 @@ class Order
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $comment = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isActive = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,6 +143,18 @@ class Order
     public function setComment(?string $comment): static
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setActive(?bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

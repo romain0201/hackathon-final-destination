@@ -40,7 +40,7 @@ class SMSController extends AbstractController
 
         $channelId = $channel->getId();
 
-        $to = '+330604444761';
+        $to = $patient->getPhone();
         $body = "Bonjour, ici l'équipe du Calmedica !
         Vous avez été opéré dernièrement, comment vous sentez-vous ? Dites nous tout !
         RDV sur : https://localhost/conversations/{$channelId}
