@@ -1,47 +1,56 @@
-<!DOCTYPE html>
-
-<title>Order index</title>
+{% extends 'base_back.html.twig' %}
 
 {% block body %}
-    <h1>Order index</h1>
+<div class="overflow-x-auto pb-2">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="sm:flex sm:items-center mb-6">
+            <div class="sm:flex-auto">
+                <h1 class="text-base font-semibold leading-6 text-gray-900">Ordonnances</h1>
+                <p class="mt-2 text-sm text-gray-700">Liste des ordonnances générées.</p>
+            </div>
+            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex items-center gap-2">
+                <a class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600" href="{{ path('app_order_new') }}">Créer une ordonnance</a>
+            </div>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Created_at</th>
-                <th>Preparation_date</th>
-                <th>OrderItems</th>
-                <th>File</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.preparationDate ? order.preparationDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.orderItems ? order.orderItems|json_encode : '' }}</td>
-                <td>
-                    {% if order.getFileUrl() %}
-                        <a href="{{ order.getFileUrl() }}" target="_blank">Download File</a>
-                    {% else %}
-                        No file
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ path('app_order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('app_order_edit', {'id': order.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_order_new') }}">Create new</a>
+        <div class="mt-8 flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">ID</th>
+                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Date de création</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date de préparation</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Préscriptions</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Fichier</th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                        {% for order in orders %}
+                            <tr class="even:bg-gray-50">
+                                <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 flex items-center gap-3">{{ order.id }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ order.createdAt ? order.createdAt|date('d/m/Y') : '' }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ order.preparationDate ? order.preparationDate|date('d/m/Y') : '' }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ order.orderItems ? order.orderItems|json_encode : '' }}</td>
+                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                    {% if order.getFileUrl() %}
+                                        <a href="{{ order.getFileUrl() }}" target="_blank" class="bg-amber-600 rounded px-6 py-1.5 text-white">Télécharger l'ordonnance</a>
+                                    {% else %}
+                                        Aucun fichier
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-3">Aucune ordonnance</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
