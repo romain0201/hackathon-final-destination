@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\StatisticRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
