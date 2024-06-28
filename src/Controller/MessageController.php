@@ -10,11 +10,15 @@ use App\Repository\UserRepository;
 use App\Service\OllamaClient;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use HttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Attribute\Route;
@@ -51,6 +55,135 @@ class MessageController extends AbstractController
         $message->setContent($content);
         $message->setChannel($channel);
         $message->setAuthor($this->getUser());
+
+        $em->persist($message);
+        $em->flush();
+
+        $jsonMessage = $serializer->serialize($message, 'json', [
+            'groups' => ['message']
+        ]);
+
+        $update = new Update(
+            sprintf('https://localhost/conversation/%s',
+                $channel->getId()),
+            $jsonMessage,
+            true
+        );
+
+        $hub->publish($update);
+
+        return new JsonResponse(
+            $jsonMessage,
+            Response::HTTP_OK,
+            [],
+            true
+        );
+    }
+
+    #[Route('/message/image', name: 'message-image', methods: ['POST'])]
+    public function sendImage(
+        Request $request,
+        ChannelRepository $channelRepository,
+        SerializerInterface $serializer,
+        EntityManagerInterface $em,
+        HubInterface $hub): JsonResponse
+    {
+        $channelId = $request->request->get('channel');
+
+        $channel = $channelRepository->find($channelId);
+        if (!$channel) {
+            throw new AccessDeniedHttpException('Message have to be sent on a specific channel');
+        }
+
+        $image = $request->files->get('file');
+        if (!$image) {
+            throw new BadRequestHttpException('No image uploaded');
+        }
+
+        $imageFileName = $this->saveImage($image);
+
+        $message = new Message();
+        $message->setImage($imageFileName);
+        $message->setChannel($channel);
+        $message->setAuthor($this->getUser());
+
+        $em->persist($message);
+        $em->flush();
+
+        $jsonMessage = $serializer->serialize($message, 'json', [
+            'groups' => ['message']
+        ]);
+
+        $update = new Update(
+            sprintf('https://localhost/conversation/%s', $channel->getId()),
+            $jsonMessage,
+            true
+        );
+
+        $hub->publish($update);
+
+        return new JsonResponse(
+            $jsonMessage,
+            Response::HTTP_OK,
+            [],
+            true
+        );
+    }
+
+    /**
+     * @throws HttpException
+     */
+    private function saveImage(UploadedFile $image): string
+    {
+        $destination = $this->getParameter('kernel.project_dir').'/public/uploads/images';
+        $originalFilename = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = \transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+        $newFilename = $safeFilename.'-'.uniqid().'.'.$image->guessExtension();
+
+        try {
+            $image->move($destination, $newFilename);
+        } catch (FileException $e) {
+            // Gérer l'exception si quelque chose se passe mal lors du déplacement du fichier
+            throw new HttpException(500, 'Unable to save the image.');
+        }
+
+        return '/uploads/images/'.$newFilename;
+    }
+
+    #[Route('/message-ia/image', name: 'message-ia-image', methods: ['POST'])]
+    public function askLlava(Request $request,
+                               ChannelRepository $channelRepository,
+                               UserRepository $userRepository,
+                               SerializerInterface $serializer,
+                               EntityManagerInterface $em,
+                               HubInterface $hub)
+    {
+        $channelId = $request->request->get('channel');
+
+        $channel = $channelRepository->find($channelId);
+        if (!$channel) {
+            throw new AccessDeniedHttpException('Message have to be sent on a specific channel');
+        }
+
+        $image = $request->request->get('image');
+        if (!$image) {
+            throw new BadRequestHttpException('No image uploaded');
+        }
+
+        if (!$channel->isLock()) return false;
+
+        $prompt = "Analyse l'image et fait en une conclusion.";
+
+        try {
+            $content = $this->ollamaClient->getResponse($prompt, 'llava', $image);
+        } catch (\Exception $e) {
+            return new Response("Erreur: " . $e->getMessage());
+        }
+
+        $message = new Message();
+        $message->setContent($content["response"]);
+        $message->setChannel($channel);
+        $message->setAuthor($userRepository->find(1));
 
         $em->persist($message);
         $em->flush();
