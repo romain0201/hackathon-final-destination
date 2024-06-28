@@ -29,9 +29,6 @@ class OrderController extends AbstractController
     {
         $order = new Order();
 
-        $pharmacies = $userRepository->findByRole('ROLE_PHARMACY');
-        $clients = $userRepository->findByRole('ROLE_PATIENT');
-
         $form = $this->createForm(OrderType::class, $order);
         $form->handleRequest($request);
 
@@ -67,9 +64,7 @@ class OrderController extends AbstractController
 
         return $this->render('order/new.html.twig', [
             'order' => $order,
-            'form' => $form->createView(),
-            'pharmacies' => $pharmacies,
-            'clients' => $clients,
+            'form' => $form->createView()
         ]);
     }
 
