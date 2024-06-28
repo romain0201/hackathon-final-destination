@@ -16,6 +16,15 @@ class StatisticRepository extends ServiceEntityRepository
         parent::__construct($registry, Statistic::class);
     }
 
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Statistic[] Returns an array of Statistic objects
     //     */

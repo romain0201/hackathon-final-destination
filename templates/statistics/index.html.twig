@@ -1,0 +1,93 @@
+{% extends 'base_front.html.twig' %} {% block body %}
+<div
+    class="container mx-auto p-6 bg-gradient-to-r from-blue-50 to-blue-100 min-h-screen"
+>
+    {% if statistics.local_statistics.symptom_count is defined %}
+    <div class="mb-6">
+        <h2 class="text-3xl font-bold mb-4 text-blue-800">
+            Nombre de Symptômes
+        </h2>
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl overflow-x-auto"
+        >
+            <canvas id="symptom_count" style="min-width: 600px"></canvas>
+            <script>
+                var ctx = document.getElementById('symptom_count').getContext('2d');
+                var symptomCountLabels = {{ statistics.local_statistics.symptom_count|keys|json_encode|raw }};
+                var symptomCountData = [];
+                {% for value in statistics.local_statistics.symptom_count %}
+                    symptomCountData.push({{ value }});
+                {% endfor %}
+                var symptomCount = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: symptomCountLabels,
+                        datasets: [{
+                            label: 'Nombre de Patients',
+                            data: symptomCountData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            },
+                            x: {
+                                ticks: {
+                                    maxRotation: 90,
+                                    minRotation: 45
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% if statistics.local_statistics.number_of_severe_cases is defined %}
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+        >
+            <h2 class="text-3xl font-bold mb-4 text-red-800">
+                Nombre de Cas Graves
+            </h2>
+            <p class="text-2xl text-gray-900">
+                {{ statistics.local_statistics.number_of_severe_cases }}
+            </p>
+        </div>
+        {% endif %} {% if statistics.local_statistics.total_messages is defined
+        %}
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+        >
+            <h2 class="text-3xl font-bold mb-4 text-green-800">
+                Nombre Total de Messages
+            </h2>
+            <p class="text-2xl text-gray-900">
+                {{ statistics.local_statistics.total_messages }}
+            </p>
+        </div>
+        {% endif %} {% if statistics.local_statistics.average_messages_per_user
+        is defined %}
+        <div
+            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+        >
+            <h2 class="text-3xl font-bold mb-4 text-purple-800">
+                Moyenne de Messages par Utilisateur
+            </h2>
+            <p class="text-2xl text-gray-900">
+                {{ statistics.local_statistics.average_messages_per_user }}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
