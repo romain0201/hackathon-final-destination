@@ -1,0 +1,121 @@
+{{ form_start(form, {attr: {class: 'space-y-4 bg-white p-6 rounded shadow-md'}}) }}
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        {{ form_label(form.doctor, 'Médecin', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.doctor, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.created_at, 'Date de création', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.created_at, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.preparation_date, 'Date de préparation', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.preparation_date, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.client, 'Client', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.client, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.pharmacy, 'Pharmacie', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.pharmacy, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.file, 'Fichier à télécharger', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.file, { 'attr': { 'class': 'mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none' } }) }}
+    </div>
+</div>
+
+{{ form_widget(form.orderItems, { 'attr': { 'id': 'order-items-field', 'class': 'hidden' } }) }}
+
+<div id="order-items-list" class="space-y-4 mt-4">
+    <div class="order-item flex items-end space-x-4">
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Médicament</label>
+            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 medicament" required>
+        </div>
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Quantité</label>
+            <input type="number" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 quantity" required>
+        </div>
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Description</label>
+            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 description" required>
+        </div>
+        <button type="button" class="remove-order-item mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">Supprimer</button>
+    </div>
+</div>
+
+<button type="button" id="add-order-item" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Ajouter un autre élément</button>
+
+<button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Enregistrer</button>
+
+{{ form_end(form) }}
+
+<a href="{{ path('app_admin_home') }}" class="block mt-4 text-blue-500 hover:underline">Retour à la liste</a>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var orderItemsList = document.getElementById('order-items-list');
+        var addOrderItemButton = document.getElementById('add-order-item');
+        var orderItemsField = document.getElementById('{{ form.orderItems.vars.id }}');
+        var form = document.querySelector('form');
+        var index = 1; // Start index from 1 since one item is already added
+
+        addOrderItemButton.addEventListener('click', function() {
+            var newItemHtml = `
+                    <div class="order-item flex items-end space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Médicament</label>
+                            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 medicament" required>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Quantité</label>
+                            <input type="number" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 quantity" required>
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Description</label>
+                            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 description" required>
+                        </div>
+                        <button type="button" class="remove-order-item px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Supprimer</button>
+                    </div>
+                `;
+            index++;
+
+            var newItem = document.createElement('div');
+            newItem.innerHTML = newItemHtml;
+            orderItemsList.appendChild(newItem);
+
+            newItem.querySelector('.remove-order-item').addEventListener('click', function() {
+                orderItemsList.removeChild(newItem);
+                updateOrderItemsField();
+            });
+
+            updateOrderItemsField();
+        });
+
+        function updateOrderItemsField() {
+            var items = [];
+            document.querySelectorAll('.order-item').forEach(function(item) {
+                var medicament = item.querySelector('.medicament').value;
+                var quantity = item.querySelector('.quantity').value;
+                var description = item.querySelector('.description').value;
+                items.push({ medicament: medicament, quantity: quantity, description: description });
+            });
+            orderItemsField.value = JSON.stringify(items);
+        }
+
+        form.addEventListener('submit', function(event) {
+            updateOrderItemsField();
+        });
+
+        document.querySelectorAll('.remove-order-item').forEach(function(button) {
+            button.addEventListener('click', function() {
+                var item = button.closest('.order-item');
+                orderItemsList.removeChild(item);
+                updateOrderItemsField();
+            });
+        });
+    });
+</script>

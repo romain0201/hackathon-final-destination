@@ -67,12 +67,11 @@ class UserFixtures extends Fixture
         $pharmacie = new User();
         $pharmacie->setEmail('pharmacie@hackathon.fr');
         $pharmacie->setName('Pharmacie');
+        $pharmacie->setRoles(['ROLE_PHARMACY']);
         $pharmacie->setPassword($this->passwordHasher->hashPassword($pharmacie, 'test'));
-        $pharmacie->setRoles(['ROLE_PHARMACIEN']);
         $pharmacie->setVerified(true);
         $manager->persist($pharmacie);
         
         $manager->flush();
     }
 }
-        
