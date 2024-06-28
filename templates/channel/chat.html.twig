@@ -22,7 +22,11 @@
                             </div>
                             <p class="leading-relaxed">
                                 <span class="block font-bold text-gray-700">{{ message.author.name }} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('{{ message.content|escape('js') }}')"></i></span>
-                                {{ message.content }}
+                                {% if message.content %}
+                                    {{ message.content }}
+                                {% else %}
+                                    <img src="{{ asset(message.image) }}" alt="image">
+                                {% endif %}
                             </p>
                         </div>
                     {% else %}
@@ -59,7 +63,7 @@
             </div>
 
             <div class="flex items-center pt-0">
-                <form id="form" class="flex items-center justify-center w-full space-x-2">
+                <form id="form" class="flex items-center justify-center w-full space-x-2" enctype="multipart/form-data">
                     <input
                         {% if is_granted("ROLE_ADMIN") and channel.lock  %}
                             disabled
@@ -73,8 +77,9 @@
                         <i class="fa-solid fa-microphone"></i>
                     </button>
 
-                    <button
-                        class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-orange-500 h-10 px-4 py-2">
+                    <input type="file" id="imageInput" class="hidden" accept="image/*" onchange="uploadImage()">
+
+                    <button type="button" class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-orange-500 h-10 px-4 py-2" onclick="document.getElementById('imageInput').click();">
                         <i class="fa-solid fa-image"></i>
                     </button>
 
@@ -151,6 +156,46 @@
             });
         };
 
+        function uploadImage() {
+            const fileInput = document.getElementById('imageInput');
+            const channelId = "{{ channel.id }}";
+
+            if (fileInput.files.length > 0) {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('channel', channelId);
+
+                fetch('/message/image', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        loader.classList.add('flex');
+                        loader.classList.remove('hidden');
+
+                        formData.append('image', data.image);
+
+                        fetch('/message-ia/image', {
+                            method: 'POST',
+                            body: formData
+                        }).then(response => {
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                        }).catch(error => {
+                            console.error('Error:', error);
+                            loader.classList.add('hidden');
+                            loader.classList.remove('flex');
+                        });
+                    }).catch(error => {
+                    console.error('Error:', error);
+                    loader.classList.add('hidden');
+                    loader.classList.remove('flex');
+                });
+
+            }
+        }
+
         const eventSource = new EventSource("{{ mercure(urlForMercure, { subscribe: urlForMercure })|escape('js') }}", {
             withCredentials: true
         });
@@ -163,20 +208,29 @@
             messageElement.classList.add('flex', 'gap-3', 'my-4', 'text-gray-600', 'text-sm', 'flex-1');
 
             if (isUserMessage) {
+                let messageContent;
+
+                if (data.content) {
+                    messageContent = data.content;
+                } else {
+                    const imagePath = `https://localhost${data.image}`;
+                    messageContent = `<img src="${imagePath}" alt="image">`;
+                }
+
                 messageElement.innerHTML = `
-            <div class="rounded-full flex shrink-0 items-center justify-center bg-gray-100 border border-gray-300 w-10 h-10">
-                <svg stroke="none" fill="black" stroke-width="0"
-                     viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z">
-                    </path>
-                </svg>
-            </div>
-            <p class="leading-relaxed">
-                <span class="block font-bold text-gray-700">${data.author.name} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('${data.content}')"></i></span>
-                ${data.content}
-            </p>
-        `;
+                    <div class="rounded-full flex shrink-0 items-center justify-center bg-gray-100 border border-gray-300 w-10 h-10">
+                        <svg stroke="none" fill="black" stroke-width="0"
+                            viewBox="0 0 16 16" height="20" width="20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <p class="leading-relaxed">
+                        <span class="block font-bold text-gray-700">${data.author.name} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('${data.content}')"></i></span>
+                        ${messageContent}
+                    </p>
+                `;
             } else {
                 messageElement.innerHTML = `
             <div class="rounded-full flex shrink-0 items-center justify-center bg-gray-100 border border-gray-300 w-10 h-10">

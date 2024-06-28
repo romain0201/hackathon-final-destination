@@ -19,13 +19,15 @@ class OllamaClient
         $this->apiUrl = $apiUrl;
     }
 
-    public function getResponse(string $input, string $model = "mistral"): ?array
+    public function getResponse(string $input, string $model = "mistral", $image = null): ?array
     {
+        if ($image) $image = file_get_contents("../public{$image}");
         $response = $this->httpClient->request('POST', $this->apiUrl, [
             'json' => [
                 'model' => $model,
                 'prompt' => $input,
-                'stream' => false
+                'images' => [base64_encode($image)],
+                'stream' => false,
             ],
         ]);
 
