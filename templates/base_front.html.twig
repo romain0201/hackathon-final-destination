@@ -7,6 +7,7 @@
             rel="icon"
             href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"
         />
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         {% block stylesheets %}
         {{
             encore_entry_link_tags("app")
@@ -51,23 +52,25 @@
                         </svg>
                     </button>
                 </div>
-                <div class="hidden lg:flex lg:flex-1 items-center lg:justify-end">
+                <div
+                    class="hidden lg:flex lg:flex-1 items-center lg:justify-end"
+                >
                     {% if app.user %}
-                        <p class="text-sm font-semibold leading-6 text-gray-900">
-                            Bonjour {{ app.user.name }}
-                        </p>
-                        <a
-                            href=""
-                            class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
-                        >
-                            Mes conversations
-                        </a>
-                        <a
-                            href="{{ path('app_logout') }}"
-                            class="text-sm font-semibold leading-6 ml-3 bg-amber-500 rounded-md px-3 py-1.5 text-white"
-                        >
-                            Déconnexion
-                        </a>
+                    <p class="text-sm font-semibold leading-6 text-gray-900">
+                        Bonjour {{ app.user.name }}
+                    </p>
+                    <a
+                        href=""
+                        class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                    >
+                        Mes conversations
+                    </a>
+                    <a
+                        href="{{ path('app_logout') }}"
+                        class="text-sm font-semibold leading-6 ml-3 bg-amber-500 rounded-md px-3 py-1.5 text-white"
+                    >
+                        Déconnexion
+                    </a>
                     {% else %}
                     <a
                         href="{{ path('app_login') }}"
@@ -137,13 +140,13 @@
             </div>
         </header>
 
-		<main class="pt-7 pb-4 px-4 w-full">
+        <main class="pt-7 pb-4 px-4 w-full">
             {% block body %}{% endblock %}
         </main>
 
-        {% block javascripts %}
-            {% block importmap %} {{ importmap("app") }} {% endblock %}
-            {{ encore_entry_script_tags("app") }}
+        {% block javascripts %} {% block importmap %} {{ importmap("app") }} {%
+        endblock %}
+        {{ encore_entry_script_tags("app") }}
         {% endblock %}
     </body>
 </html>

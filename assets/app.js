@@ -7,4 +7,6 @@ import "./bootstrap.js";
  */
 import "./styles/app.css";
 
+import Chart from "chart.js/auto";
+
 console.log("This log comes from assets/app.js - welcome to AssetMapper! 🎉");

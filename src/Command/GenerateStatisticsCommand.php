@@ -104,6 +104,7 @@ class GenerateStatisticsCommand extends Command
         try {
             $response = $this->openaiService->getResponse(json_encode($context), 'gpt-3.5-turbo');
             if ($response) {
+                $response['local_statistics'] = $context['local_statistics']; // Ensure local statistics are added to the response
                 foreach ($response as $statType => $statData) {
                     $statistic = (new Statistic())
                         ->setType($statType)
