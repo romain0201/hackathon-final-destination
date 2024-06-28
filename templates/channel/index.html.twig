@@ -1,33 +1,55 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Conversations{% endblock %}
 
 {% block body %}
-
     <div class="container">
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.name }}, <a href="{{ path('app_logout') }}">Logout</a>
+        <div class="overflow-x-auto pb-2">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="sm:flex sm:items-center mb-6">
+                    <div class="sm:flex-auto">
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">Conversations</h1>
+                        <p class="mt-2 text-sm text-gray-700">Liste des conversations du patient.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Nom</th>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Médecin</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Patient</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Création</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Message du médecin</th>
+                                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-3">
+                                        <span class="sr-only">Édition</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                {% for channel in channels %}
+                                    <tr class="even:bg-gray-50">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 flex items-center gap-3">{{ channel.name }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ channel.medicine.name }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ channel.patient.name }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ channel.createdAt|date("d/m/Y") }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ channel.isLock ? 'Pas d\'intervention' : 'Intervention' }}</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-blue-500">
+                                            <a href="{{ path('chat', {id: channel.id}) }}">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-        {% if channels %}
-            <h2>Which chan do you want to join ?</h2>
-            <table class="table table-striped">
-                <tbody>
-                {% for channel in channels %}
-                    <tr class="">
-                        <th>
-                            <span>{{ channel.name }}</span>
-                            <a class="btn btn-primary float-right" href="{{ path('chat', {id: channel.id}) }}">Go chat !</a>
-                        </th>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div>
-                <div class="alert alert-danger text-center">No Channels found.</div>
-            </div>
-        {% endif %}
+        </div>
     </div>
 {% endblock %}

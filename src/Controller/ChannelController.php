@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Channel;
+use App\Entity\User;
 use App\Repository\ChannelRepository;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManager;
@@ -15,10 +16,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ChannelController extends AbstractController
 {
-    #[Route('/conversations', name: 'channel')]
-    public function getChannels(ChannelRepository $channelRepository): Response
+    #[Route('/conversations/{id}', name: 'channel')]
+    public function getChannels(User $user): Response
     {
-        $channels = $channelRepository->findAll();
+        $channels = $user->getChannels();
 
         return $this->render('channel/index.html.twig', [
             'channels' => $channels ?? []
