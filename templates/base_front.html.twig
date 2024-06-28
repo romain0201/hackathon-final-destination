@@ -33,6 +33,7 @@
                     <button
                         type="button"
                         class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                        id="openMenuButton"
                     >
                         <span class="sr-only">Open main menu</span>
                         <svg
@@ -56,12 +57,29 @@
                         <p class="text-sm font-semibold leading-6 text-gray-900">
                             Bonjour {{ app.user.name }}
                         </p>
-                        <a
-                            href=""
-                            class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
-                        >
-                            Mes conversations
-                        </a>
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <a
+                                href="{{ path('app_admin_home') }}"
+                                class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                            >
+                                Panneau d'administration
+                            </a>
+                        {% elseif is_granted("ROLE_PHARMACIEN") %}
+                            <a
+                                href=""
+                                class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                            >
+                                Les commandes
+                            </a>
+                        {% else %}
+                            <a
+                                href="{{ path('channel', {id: app.user.id}) }}"
+                                class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                            >
+                                Mes conversations
+                            </a>
+                        {% endif %}
+
                         <a
                             href="{{ path('app_logout') }}"
                             class="text-sm font-semibold leading-6 ml-3 bg-amber-500 rounded-md px-3 py-1.5 text-white"
@@ -82,7 +100,8 @@
                 <!-- Background backdrop, show/hide based on slide-over state. -->
                 <div class="fixed inset-0 z-10"></div>
                 <div
-                    class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+                    id="mobileMenu"
+                    class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 hidden"
                 >
                     <div class="flex items-center justify-between">
                         <a href="#" class="-m-1.5 p-1.5">
@@ -96,6 +115,7 @@
                         <button
                             type="button"
                             class="-m-2.5 rounded-md p-2.5 text-gray-700"
+                            id="closeMenuButton"
                         >
                             <span class="sr-only">Close menu</span>
                             <svg
@@ -144,6 +164,24 @@
         {% block javascripts %}
             {% block importmap %} {{ importmap("app") }} {% endblock %}
             {{ encore_entry_script_tags("app") }}
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const openMenuButton = document.getElementById('openMenuButton');
+                    const closeMenuButton = document.getElementById('closeMenuButton');
+                    const mobileMenu = document.getElementById('mobileMenu');
+
+                    openMenuButton.addEventListener('click', function() {
+                        mobileMenu.classList.add('block');
+                        mobileMenu.classList.remove('hidden');
+                    });
+
+                    closeMenuButton.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenu.classList.remove('block');
+                    });
+                });
+            </script>
         {% endblock %}
     </body>
 </html>

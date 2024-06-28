@@ -72,7 +72,7 @@
                                             {% set break = true %}
                                         {% endif %}
                                     {% endfor %}
-                                    <a href="{{ path('channel') }}" class="text-orange-500">
+                                    <a href="{{ path('channel', {id: user.id}) }}" class="text-orange-500">
                                         <i class="fa-regular fa-comment"></i>
                                     </a>
                                     <a href="{{ path('app_sms', {'id': user.id}) }}" class="text-red-600">
