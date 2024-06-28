@@ -39,7 +39,14 @@
                         {% for user in users %}
                             <tr class="even:bg-gray-50">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 flex items-center gap-3">
-                                    <span class="w-5 h-5 bg-red-500 rounded-full"></span>
+                                    {% set break = false %}
+                                    {% for symptom in user.symptoms %}
+                                        {% if not break and symptom.isActive %}
+                                            <span class="w-5 h-5 bg-red-500 rounded-full"></span>
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="w-5 h-5 bg-red-500 rounded-full hidden" id="alertUser{{ user.id }}"></span>
                                     {{ user.name }}
                                 </td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">02/01/2001</td>
@@ -51,15 +58,21 @@
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ user.isVerified ? 'Actif' : 'Non actif' }}</td>
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">001002003</td>
                                 <td class="flex items-center justify-between">
-                                    {% if user.phone %}
-                                        <a href="tel:{{ user.phone }}" class="text-green-600">
-                                            <i class="fa-solid fa-phone"></i>
-                                        </a>
-                                    {% endif %}
-                                    <a href="{{ path('channel') }}" class="text-blue-600">
-                                        <i class="fa-solid fa-video"></i>
-                                    </a>
-                                    <a href="{{ path('channel') }}" class="text-orange-500">
+                                    {% set break = false %}
+                                    {% for symptom in user.symptoms %}
+                                        {% if not break and symptom.isActive %}
+                                            {% if user.phone %}
+                                                <a href="tel:{{ user.phone }}" class="text-green-600">
+                                                    <i class="fa-solid fa-phone"></i>
+                                                </a>
+                                            {% endif %}
+                                            <a href="{{ path('app_init_teleconsultation', {id: user.id}) }}" class="text-blue-600">
+                                                <i class="fa-solid fa-video"></i>
+                                            </a>
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <a href="{{ path('channel', {id: user.id}) }}" class="text-orange-500">
                                         <i class="fa-regular fa-comment"></i>
                                     </a>
                                     <a href="{{ path('app_sms', {'id': user.id}) }}" class="text-red-600">
@@ -75,3 +88,17 @@
         </div>
     </div>
 </div>
+
+{% block javascripts %}
+    <script>
+        const eventSource = new EventSource("{{ mercure(urlForMercure, { subscribe: urlForMercure })|escape('js') }}", {
+            withCredentials: true
+        });
+        eventSource.onmessage = event => {
+            const data = JSON.parse(event.data);
+            console.log(data)
+            const userBlock = document.getElementById('alertUser' + data.id)
+            userBlock.classList.remove('hidden')
+        };
+    </script>
+{% endblock %}
