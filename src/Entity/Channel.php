@@ -12,6 +12,8 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Entity(repositoryClass: ChannelRepository::class)]
 class Channel
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\Column(type: UuidType::NAME, unique: true)]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
@@ -32,6 +34,9 @@ class Channel
 
     #[ORM\ManyToOne(inversedBy: 'channels')]
     private ?User $patient = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $lock = true;
 
     public function __construct()
     {
@@ -105,6 +110,18 @@ class Channel
     public function setPatient(?User $patient): static
     {
         $this->patient = $patient;
+
+        return $this;
+    }
+
+    public function isLock(): ?bool
+    {
+        return $this->lock;
+    }
+
+    public function setLock(?bool $lock): static
+    {
+        $this->lock = $lock;
 
         return $this;
     }
