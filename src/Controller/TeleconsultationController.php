@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Service\TwilioService;
+use Twilio\Jwt\AccessToken;
+use Twilio\Jwt\Grants\VideoGrant;
 
 class TeleconsultationController extends AbstractController
 {
@@ -41,7 +41,7 @@ class TeleconsultationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_teleconsultation_video');
+        return $this->redirectToRoute('app_teleconsultation_video', ["medicine" => $userRepository->find($this->getUser())->getId(), "patient" => $user->getId()]);
     }
 
     #[Route('/teleconsultation/verification/code', name: 'app_teleconsultation_verification_code', methods: ["POST"])]
@@ -64,9 +64,36 @@ class TeleconsultationController extends AbstractController
         return $this->render('teleconsultation/verify.html.twig');
     }
 
-    #[Route('/teleconsultation/video', name: 'app_teleconsultation_video')]
-    public function videoTeleconsultation(): Response
+    #[Route('/teleconsultation/video/{medicine}/{patient}', name: 'app_teleconsultation_video')]
+    public function videoTeleconsultation(User $medicine, User $patient): Response
     {
-        return $this->render('teleconsultation/video.html.twig');
+        return $this->render('teleconsultation/video.html.twig', [
+            'medicine' => $medicine->getName(),
+            'patient' => $patient->getName()
+        ]);
+    }
+
+    #[Route('/access_token', name: 'access_token', methods: ['POST'])]
+    public function generate_token(Request $request)
+    {
+        $accountSid = $this->getParameter('app.env.TWILIO_ACCOUNT_SID');
+        $apiKeySid = $this->getParameter('app.env.TWILIO_API_KEY_SID');
+        $apiKeySecret = $this->getParameter('app.env.TWILIO_API_KEY_SECRET');
+        $identity = uniqid();
+
+        $roomName = json_decode($request->getContent());
+
+        $token = new AccessToken(
+            $accountSid,
+            $apiKeySid,
+            $apiKeySecret,
+            3600,
+            $identity
+        );
+
+        $grant = new VideoGrant();
+        $grant->setRoom($roomName->roomName);
+        $token->addGrant($grant);
+        return $this->json(['token' => $token->toJWT()], 200);
     }
 }

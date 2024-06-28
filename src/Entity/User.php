@@ -66,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Channel>
      */
-    #[ORM\OneToMany(targetEntity: Channel::class, mappedBy: 'medicine')]
+    #[ORM\OneToMany(targetEntity: Channel::class, mappedBy: 'patient')]
     private Collection $channels;
 
     #[ORM\Column(length: 20, nullable: true)]
