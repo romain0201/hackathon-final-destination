@@ -15,20 +15,20 @@
                 <div class="flex items-center gap-x-6">
                     <img src="https://tailwindui.com/img/logos/48x48/tuple.svg" alt=""
                          class="h-16 w-16 flex-none rounded-full ring-1 ring-gray-900/10">
-                    <h1>
+                    <div>
                         <div class="text-sm leading-6 text-gray-500">Ordonnance <span
                                 class="text-gray-700">#{{ order.id }}</span>
                         </div>
                         <div class="mt-1 text-base font-semibold leading-6 text-gray-900">{{ order.client.name }}</div>
-                    </h1>
+                    </div>
                 </div>
-                <div class="flex items-center gap-x-4 sm:gap-x-6">
-                    <a href="#" class="hidden text-sm font-semibold leading-6 text-gray-900 sm:block">Mettre en
-                        attente</a>
-                    <a href="#"
-                       class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Valider
-                        la commande</a>
-                </div>
+                {% if order.isActive %}
+                    <div class="flex items-center gap-x-4 sm:gap-x-6">
+                        <a href="{{ path('app_pharmacy_order_validate', {id: order.id}) }}"
+                           class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Valider
+                            la commande</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </header>

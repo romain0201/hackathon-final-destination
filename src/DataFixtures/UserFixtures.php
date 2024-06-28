@@ -23,6 +23,7 @@ class UserFixtures extends Fixture
         $ia = new User();
         $ia->setEmail('ia@hackathon.fr');
         $ia->setName('IA');
+        $ia->setPhone("+330604444761");
         $ia->setPassword($this->passwordHasher->hashPassword($ia, 'test'));
         $ia->setRoles(['ROLE_ADMIN']);
         $ia->setVerified(true);
@@ -32,6 +33,7 @@ class UserFixtures extends Fixture
         $admin = new User();
         $admin->setEmail('admin@hackathon.fr');
         $admin->setName('Admin');
+        $admin->setPhone("+330604444761");
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'test'));
         $admin->setRoles(['ROLE_ADMIN']);
         $admin->setVerified(true);
@@ -40,6 +42,7 @@ class UserFixtures extends Fixture
         $user1 = new User();
         $user1->setEmail('user@hackathon.fr');
         $user1->setName('User');
+        $user1->setPhone("+330604444761");
         $user1->setPassword($this->passwordHasher->hashPassword($user1, 'test'));
         $user1->setRoles(['ROLE_PATIENT']);
         $user1->setVerified(true);
@@ -49,6 +52,7 @@ class UserFixtures extends Fixture
         $user2 = new User();
         $user2->setEmail('user2@hackathon.fr');
         $user2->setName('User2');
+        $user2->setPhone("+330604444761");
         $user2->setPassword($this->passwordHasher->hashPassword($user2, 'test'));
         $user2->setRoles(['ROLE_PATIENT']);
         $user2->setVerified(true);
@@ -58,6 +62,7 @@ class UserFixtures extends Fixture
         $user3 = new User();
         $user3->setEmail('user3@hackathon.fr');
         $user3->setName('User3');
+        $user3->setPhone("+330604444761");
         $user3->setPassword($this->passwordHasher->hashPassword($user3, 'test'));
         $user3->setRoles(['ROLE_PATIENT']);
         $user3->setVerified(true);
@@ -67,11 +72,12 @@ class UserFixtures extends Fixture
         $pharmacie = new User();
         $pharmacie->setEmail('pharmacie@hackathon.fr');
         $pharmacie->setName('Pharmacie');
+        $pharmacie->setPhone('+330604444761');
         $pharmacie->setRoles(['ROLE_PHARMACY']);
         $pharmacie->setPassword($this->passwordHasher->hashPassword($pharmacie, 'test'));
         $pharmacie->setVerified(true);
         $manager->persist($pharmacie);
-        
+
         $manager->flush();
     }
 }
