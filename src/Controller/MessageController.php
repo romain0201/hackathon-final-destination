@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Repository\ChannelRepository;
 use App\Repository\MessageRepository;
+use App\Repository\SymptomRepository;
 use App\Repository\UserRepository;
 use App\Service\OllamaClient;
 use DateTime;
@@ -50,9 +51,6 @@ class MessageController extends AbstractController
         $message->setContent($content);
         $message->setChannel($channel);
         $message->setAuthor($this->getUser());
-        $date = new DateTime();
-        $message->setCreatedAt($date);
-        $message->setUpdatedAt($date);
 
         $em->persist($message);
         $em->flush();
@@ -83,6 +81,7 @@ class MessageController extends AbstractController
                                ChannelRepository $channelRepository,
                                MessageRepository $messageRepository,
                                UserRepository $userRepository,
+                               SymptomRepository $symptomRepository,
                                SerializerInterface $serializer,
                                EntityManagerInterface $em,
                                HubInterface $hub)
@@ -99,6 +98,8 @@ class MessageController extends AbstractController
             throw new AccessDeniedHttpException('Message have to be sent on a specific channel');
         }
 
+        if (!$channel->isLock()) return false;
+
         $previousMessages = $messageRepository->findBy(['channel' => $channel]);
         $previousMessagesFormatForIA = null;
 
@@ -107,6 +108,51 @@ class MessageController extends AbstractController
                 $previousMessagesFormatForIA .= "IA : " . $previousMessage->getContent();
             else $previousMessagesFormatForIA .= "USER : " . $previousMessage->getContent();
         }
+
+
+        $symptoms = $symptomRepository->findAll();
+        $outputString = "";
+        foreach ($symptoms as $symptom) {
+            $id = $symptom->getId();
+            $name = $symptom->getName();
+
+            $outputString .= "$id | $name\n";
+        }
+
+        $messageForAnalyse = "Voici la liste des précédents échanges entre toi (l'IA) et l'utilisateur (USER) :
+                                " . $previousMessagesFormatForIA . "USER : " . $content . ".
+                                En te basant sur ce tableau de symptômes :
+                                " . $outputString  . "
+                                Tu vas me dire si tu as assez d'informations pour le ranger (le USER) dans une des catégories présentes.
+                                Tu vas me retourner ta réponse (oui ou non) en te basant sur les symptômes en tableau sous le format suivant : Oui (ou) Non - l'id du symptôme (juste le chiffre, pas de texte ; exemple si oui : 'Oui - 1' ou si non : 'Non' ; et tu t'arrêtes là).
+                                Soit le plus précis possible, c'est à dire qu'il faut avoir une réponse en rapport avec la santé.
+                                Ainsi moi derrière, avec une regex, je vais pouvoir enregistrer le contexte du patient en BDD en fonction de ses symptômes.";
+
+        $responseAfterAnalyse = $this->ollamaClient->getResponse($messageForAnalyse);
+
+        if (preg_match("/\boui\b/i", $responseAfterAnalyse['response']))
+            if (preg_match_all("/\b-?\d+(\.\d+)?\b/", $responseAfterAnalyse['response'], $matches))
+                if ($symptomRepository->find($matches[0][0])) {
+                    $user = $userRepository->find($this->getUser());
+                    $user->addSymptom($symptomRepository->find($matches[0][0]));
+
+                    $em->persist($user);
+                    $em->flush();
+
+                    if ($symptomRepository->find($matches[0][0])->isActive()) {
+                        $jsonSymptom = $serializer->serialize($user, 'json', [
+                            'groups' => ['symptom']
+                        ]);
+
+                        $updateSymptomAfterAnalyseForAdmin = new Update(
+                            'https://localhost/admin/symptomAfterAnalyse',
+                            $jsonSymptom,
+                            true
+                        );
+
+                        $hub->publish($updateSymptomAfterAnalyseForAdmin);
+                    }
+                }
 
         $messageForIa = "Voici la liste des précédents échanges entre toi (l'IA) et l'utilisateur (USER). Tu vas t'en servir au fur et à mesure de la conversation pour répondre à l'utilisateur. Voici la liste de message précédents = "
             . $previousMessagesFormatForIA . ". Depuis cette échange, répond à la question suivante : " . $content;
@@ -121,9 +167,6 @@ class MessageController extends AbstractController
         $message->setContent($content["response"]);
         $message->setChannel($channel);
         $message->setAuthor($userRepository->find(1));
-        $date = new DateTime();
-        $message->setCreatedAt($date);
-        $message->setUpdatedAt($date);
 
         $em->persist($message);
         $em->flush();
