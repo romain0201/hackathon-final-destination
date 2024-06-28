@@ -30,9 +30,12 @@ class OpenAiService
             ],
             'json' => [
                 'model' => $model,
-                'messages' => [['role' => 'user', 'content' => $input]],
-                'max_tokens' => 100,
-                'temperature' => 0.5,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Vous êtes un analyste de données. Fournissez une analyse détaillée et des prédictions basées sur les données fournies, en français.'],
+                    ['role' => 'user', 'content' => $input]
+                ],
+                'max_tokens' => 1000,
+                'temperature' => 0.7,
                 'top_p' => 1,
                 'n' => 1,
                 'stream' => false

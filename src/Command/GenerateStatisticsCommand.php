@@ -91,7 +91,7 @@ class GenerateStatisticsCommand extends Command
         $averageMessagesPerUser = $totalUsers > 0 ? $totalMessages / $totalUsers : 0;
 
         $context = [
-            'task' => 'Generate global statistics on patient symptoms and messages',
+            'task' => 'Générer une analyse détaillée des données, y compris des conclusions statistiques et des prédictions.',
             'data' => $data,
             'local_statistics' => [
                 'symptom_count' => $symptomCount,
@@ -104,7 +104,12 @@ class GenerateStatisticsCommand extends Command
         try {
             $response = $this->openaiService->getResponse(json_encode($context), 'gpt-3.5-turbo');
             if ($response) {
-                $response['local_statistics'] = $context['local_statistics']; // Ensure local statistics are added to the response
+                $analysis = (new Statistic())
+                ->setType('detailed_analysis')
+                ->setData($response['choices'][0]['message']['content']);
+                $this->entityManager->persist($analysis);
+
+                $response['local_statistics'] = $context['local_statistics']; 
                 foreach ($response as $statType => $statData) {
                     $statistic = (new Statistic())
                         ->setType($statType)
