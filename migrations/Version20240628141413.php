@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240628123024 extends AbstractMigration
+final class Version20240628141413 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,7 +27,7 @@ final class Version20240628123024 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_A2F98E472F7D140A ON channel (medicine_id)');
         $this->addSql('CREATE INDEX IDX_A2F98E476B899279 ON channel (patient_id)');
         $this->addSql('COMMENT ON COLUMN channel.id IS \'(DC2Type:uuid)\'');
-        $this->addSql('CREATE TABLE message (id UUID NOT NULL, author_id INT DEFAULT NULL, channel_id UUID DEFAULT NULL, content TEXT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE message (id UUID NOT NULL, author_id INT DEFAULT NULL, channel_id UUID DEFAULT NULL, content TEXT DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_B6BD307FF675F31B ON message (author_id)');
         $this->addSql('CREATE INDEX IDX_B6BD307F72F5A1AA ON message (channel_id)');
         $this->addSql('COMMENT ON COLUMN message.id IS \'(DC2Type:uuid)\'');
