@@ -28,7 +28,6 @@
         </div>
     </div>
 
-    <!-- Orders list section -->
     <div class="mx-auto -mt-12 max-w-7xl px-6 sm:mt-0 lg:px-8 xl:-mt-8">
         <div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Commandes</h2>
@@ -38,9 +37,11 @@
                         <ul>
                             {% for order in orders %}
                                 <li class="mb-4 p-4 border rounded-lg shadow-sm">
-                                    <h3 class="text-xl font-semibold text-gray-900">Commande #{{ order.id }}</h3>
-                                    <p class="text-gray-600">Date: {{ order.createdAt|date("d/m/Y") }}</p>
-                                    <p class="text-gray-600">Preparation Date: {{ order.preparationDate|date("d/m/Y") }}</p>
+                                    <a href="{{ path('app_pharmacy_order', {'id': order.id}) }}" class="block">
+                                        <h3 class="text-xl font-semibold text-gray-900">Commande #{{ order.id }}</h3>
+                                        <p class="text-gray-600">Date: {{ order.createdAt|date("d/m/Y") }}</p>
+                                        <p class="text-gray-600">Date de préparation: {{ order.preparationDate|date("d/m/Y") }}</p>
+                                    </a>
                                 </li>
                             {% endfor %}
                         </ul>
