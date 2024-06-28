@@ -22,7 +22,7 @@ class Message
     #[Groups(['message'])]
     private ?Uuid $id;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['message'])]
     private ?string $content = null;
 
@@ -33,6 +33,10 @@ class Message
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[Groups(['message'])]
     private ?Channel $channel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['message'])]
+    private ?string $image = null;
 
     public function getId(): ?Uuid
     {
@@ -71,6 +75,18 @@ class Message
     public function setChannel(?Channel $channel): static
     {
         $this->channel = $channel;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

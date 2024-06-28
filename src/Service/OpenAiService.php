@@ -8,26 +8,37 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 
-class OllamaClient
+class OpenAiService
 {
     private $httpClient;
     private $apiUrl;
+    private $apiKey;
 
-    public function __construct(string $apiUrl = "http://host.docker.internal:11434/api/generate")
+    public function __construct(string $apiUrl, string $apiKey)
     {
         $this->httpClient = HttpClient::create();
         $this->apiUrl = $apiUrl;
+        $this->apiKey = $apiKey;
     }
 
-    public function getResponse(string $input, string $model = "mistral", $image = null): ?array
+    public function getResponse(string $input, string $model = "gpt-3.5-turbo"): ?array
     {
-        if ($image) $image = file_get_contents("../public{$image}");
         $response = $this->httpClient->request('POST', $this->apiUrl, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Content-Type' => 'application/json',
+            ],
             'json' => [
                 'model' => $model,
-                'prompt' => $input,
-                'images' => [base64_encode($image)],
-                'stream' => false,
+                'messages' => [
+                    ['role' => 'system', 'content' => 'Vous êtes un analyste de données. Fournissez une analyse détaillée et des prédictions basées sur les données fournies, en français.'],
+                    ['role' => 'user', 'content' => $input]
+                ],
+                'max_tokens' => 1000,
+                'temperature' => 0.7,
+                'top_p' => 1,
+                'n' => 1,
+                'stream' => false
             ],
         ]);
 
