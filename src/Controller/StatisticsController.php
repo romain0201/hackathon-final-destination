@@ -24,7 +24,16 @@ class StatisticsController extends AbstractController
 
         $statsData = [];
         foreach ($statistics as $statistic) {
-            $statsData[$statistic->getType()] = json_decode($statistic->getData(), true);
+            $type = $statistic->getType();
+            $data = $statistic->getData();
+            
+            if ($data !== null) {
+                if ($type === 'detailed_analysis') {
+                    $statsData[$type] = $data; 
+                } else {
+                    $statsData[$type] = json_decode($data, true);
+                }
+            }
         }
 
         return $this->render('statistics/index.html.twig', [

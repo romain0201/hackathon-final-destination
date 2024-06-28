@@ -79,7 +79,7 @@ class GenerateStatisticsCommand extends Command
 
         $numberOfSevereCases = 0;
         foreach ($symptoms as $symptom) {
-            if ($symptom->getCode() === 'grave') {
+            if ($symptom->isActive() === true) {
                 $numberOfSevereCases += count($symptom->getPatient());
             }
         }
