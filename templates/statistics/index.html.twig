@@ -14,7 +14,7 @@
         </div>
     </div>
     {% endif %} {% if statistics.local_statistics.symptom_count is defined %}
-    <div class="mb-6">
+    <div class="mb-6 mt-8">
         <h2 class="text-3xl font-bold mb-4 text-blue-800">
             Nombre de Symptômes
         </h2>
@@ -62,41 +62,47 @@
     </div>
     {% endif %}
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
         {% if statistics.local_statistics.number_of_severe_cases is defined %}
         <div
-            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+            class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
         >
-            <h2 class="text-3xl font-bold mb-4 text-red-800">
+            <dt class="truncate text-sm font-medium text-gray-500">
                 Nombre de Cas Graves
-            </h2>
-            <p class="text-2xl text-gray-900">
+            </dt>
+            <dd
+                class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+            >
                 {{ statistics.local_statistics.number_of_severe_cases }}
-            </p>
+            </dd>
         </div>
         {% endif %} {% if statistics.local_statistics.total_messages is defined
         %}
         <div
-            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+            class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
         >
-            <h2 class="text-3xl font-bold mb-4 text-green-800">
+            <dt class="truncate text-sm font-medium text-gray-500">
                 Nombre Total de Messages
-            </h2>
-            <p class="text-2xl text-gray-900">
+            </dt>
+            <dd
+                class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+            >
                 {{ statistics.local_statistics.total_messages }}
-            </p>
+            </dd>
         </div>
         {% endif %} {% if statistics.local_statistics.average_messages_per_user
         is defined %}
         <div
-            class="bg-white p-6 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+            class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6"
         >
-            <h2 class="text-3xl font-bold mb-4 text-purple-800">
+            <dt class="truncate text-sm font-medium text-gray-500">
                 Moyenne de Messages par Utilisateur
-            </h2>
-            <p class="text-2xl text-gray-900">
+            </dt>
+            <dd
+                class="mt-1 text-3xl font-semibold tracking-tight text-gray-900"
+            >
                 {{ statistics.local_statistics.average_messages_per_user }}
-            </p>
+            </dd>
         </div>
         {% endif %}
     </div>
