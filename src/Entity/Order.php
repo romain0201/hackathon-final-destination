@@ -35,6 +35,9 @@ class Order
     #[ORM\Column(length: 255)]
     private ?string $doctor = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $comment = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +128,18 @@ class Order
     public function setDoctor(string $doctor): static
     {
         $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
 
         return $this;
     }
