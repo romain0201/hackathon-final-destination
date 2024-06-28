@@ -21,7 +21,7 @@
                                 </svg>
                             </div>
                             <p class="leading-relaxed">
-                                <span class="block font-bold text-gray-700">{{ message.author.name }} </span>
+                                <span class="block font-bold text-gray-700">{{ message.author.name }} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('{{ message.content|escape('js') }}')"></i></span>
                                 {{ message.content }}
                             </p>
                         </div>
@@ -35,7 +35,7 @@
                                 </svg>
                             </div>
                             <p class="leading-relaxed">
-                                <span class="block font-bold text-gray-700">{{ message.author.name }} </span>
+                                <span class="block font-bold text-gray-700">{{ message.author.name }} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('{{ message.content|escape('js') }}')"></i></span>
                                 {{ message.content }}
                             </p>
                         </div>
@@ -67,6 +67,17 @@
                         class="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
                         placeholder="Entrez votre message"
                         id="message">
+
+                    <button
+                        class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-blue-500 h-10 px-4 py-2">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+
+                    <button
+                        class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-orange-500 h-10 px-4 py-2">
+                        <i class="fa-solid fa-image"></i>
+                    </button>
+
                     <button
                         {% if is_granted("ROLE_ADMIN") and channel.lock %}
                             disabled
@@ -162,7 +173,7 @@
                 </svg>
             </div>
             <p class="leading-relaxed">
-                <span class="block font-bold text-gray-700">${data.author.name}</span>
+                <span class="block font-bold text-gray-700">${data.author.name} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('${data.content}')"></i></span>
                 ${data.content}
             </p>
         `;
@@ -176,7 +187,7 @@
                 </svg>
             </div>
             <p class="leading-relaxed">
-                <span class="block font-bold text-gray-700">${data.author.name}</span>
+                <span class="block font-bold text-gray-700">${data.author.name} <i class="fa-solid fa-volume-high cursor-pointer text-gray-500 ml-3" onclick="speakText('${data.content}')"></i></span>
                 ${data.content}
             </p>
         `;
@@ -185,6 +196,83 @@
             messagesContainer.appendChild(messageElement);
             messagesContainerOverflow.scrollTop = messagesContainerOverflow.scrollHeight;
         };
+
+        function speakText(message) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'fr-FR';
+            synth.speak(utterance);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const speechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new speechRecognition();
+            recognition.lang = 'fr-FR';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            let isListening = false;
+            const microphoneButton = document.querySelector('.fa-microphone');
+            const messageInput = document.getElementById('message');
+
+            recognition.onresult = function(event) {
+                const last = event.results.length - 1;
+                messageInput.value = event.results[last][0].transcript;
+                submitMessage();
+            };
+
+            recognition.onend = function() {
+                microphoneButton.classList.remove('text-red-500');
+                microphoneButton.classList.add('text-white');
+                isListening = false;
+            };
+
+            microphoneButton.addEventListener('click', function() {
+                if (isListening) {
+                    recognition.stop();
+                    return;
+                }
+                recognition.start();
+                microphoneButton.classList.remove('text-white');
+                microphoneButton.classList.add('text-red-500');
+                isListening = true;
+            });
+
+            function submitMessage() {
+                if (!messageInput.value.trim()) return;
+                const data = {
+                    'content': messageInput.value,
+                    'channel': "{{ channel.id }}"
+                };
+                fetch('/message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(response => {
+                    message.value = '';
+
+                    loader.classList.add('flex');
+                    loader.classList.remove('hidden');
+
+                    fetch('/message-ia', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    }).then(response => {
+                        loader.classList.add('hidden');
+                        loader.classList.remove('flex');
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        loader.classList.add('hidden');
+                        loader.classList.remove('flex');
+                    });
+                });
+            }
+        });
     </script>
 {% endblock %}
 
