@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['message', 'symptom'])]
+    #[Groups(['message'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -79,6 +79,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['symptom'])]
     private Collection $symptoms;
 
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
+    private Collection $orders;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $odp = null;
 
@@ -87,6 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->messages = new ArrayCollection();
         $this->channels = new ArrayCollection();
         $this->symptoms = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -270,6 +277,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->symptoms->removeElement($symptom)) {
             $symptom->removePatient($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): static
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getClient() === $this) {
+                $order->setClient(null);
+            }
         }
 
         return $this;
