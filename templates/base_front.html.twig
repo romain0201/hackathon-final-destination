@@ -66,7 +66,7 @@
                             </a>
                         {% elseif is_granted("ROLE_PHARMACY") %}
                             <a
-                                href=""
+                                href="{{ path('app_pharmacy') }}"
                                 class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
                             >
                                 Les commandes

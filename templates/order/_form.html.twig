@@ -1,38 +1,59 @@
-{{ form_start(form) }}
+{{ form_start(form, {attr: {class: 'space-y-4 bg-white p-6 rounded shadow-md'}}) }}
 
-    {{ form_row(form.doctor) }}
-    {{ form_row(form.created_at) }}
-    {{ form_row(form.preparation_date) }}
-    {{ form_row(form.client) }}
-    {{ form_row(form.pharmacy) }}
-    {{ form_row(form.file) }}
-    {{ form_widget(form.orderItems) }}
-
-<div id="order-items-list">
-    <div class="order-item">
-        <div>
-            <label class="required">Medicament</label>
-            <input type="text" class="form-control medicament" required>
-        </div>
-        <div>
-            <label class="required">Quantity</label>
-            <input type="number" class="form-control quantity" required>
-        </div>
-        <div>
-            <label class="required">Description</label>
-            <input type="text" class="form-control description" required>
-        </div>
-        <button type="button" class="remove-order-item btn btn-danger">Remove</button>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+        {{ form_label(form.doctor, 'Médecin', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.doctor, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.created_at, 'Date de création', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.created_at, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.preparation_date, 'Date de préparation', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.preparation_date, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.client, 'Client', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.client, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.pharmacy, 'Pharmacie', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.pharmacy, { 'attr': { 'class': 'mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500' } }) }}
+    </div>
+    <div>
+        {{ form_label(form.file, 'Fichier à télécharger', { 'label_attr': { 'class': 'block text-sm font-medium text-gray-700' } }) }}
+        {{ form_widget(form.file, { 'attr': { 'class': 'mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none' } }) }}
     </div>
 </div>
 
-<button type="button" id="add-order-item" class="btn btn-secondary">Add another item</button>
+{{ form_widget(form.orderItems, { 'attr': { 'id': 'order-items-field', 'class': 'hidden' } }) }}
 
-<button type="submit" class="btn btn-primary">Save</button>
+<div id="order-items-list" class="space-y-4 mt-4">
+    <div class="order-item flex items-end space-x-4">
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Médicament</label>
+            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 medicament" required>
+        </div>
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Quantité</label>
+            <input type="number" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 quantity" required>
+        </div>
+        <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 required">Description</label>
+            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 description" required>
+        </div>
+        <button type="button" class="remove-order-item mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-blue-500 hidden">Supprimer</button>
+    </div>
+</div>
+
+<button type="button" id="add-order-item" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Ajouter un autre élément</button>
+
+<button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Enregistrer</button>
 
 {{ form_end(form) }}
 
-<a href="{{ path('app_order_index') }}">back to list</a>
+<a href="{{ path('app_admin_home') }}" class="block mt-4 text-blue-500 hover:underline">Retour à la liste</a>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -44,20 +65,20 @@
 
         addOrderItemButton.addEventListener('click', function() {
             var newItemHtml = `
-                    <div class="order-item">
-                        <div>
-                            <label class="required">Medicament</label>
-                            <input type="text" class="form-control medicament" required>
+                    <div class="order-item flex items-end space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Médicament</label>
+                            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 medicament" required>
                         </div>
-                        <div>
-                            <label class="required">Quantity</label>
-                            <input type="number" class="form-control quantity" required>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Quantité</label>
+                            <input type="number" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 quantity" required>
                         </div>
-                        <div>
-                            <label class="required">Description</label>
-                            <input type="text" class="form-control description" required>
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700 required">Description</label>
+                            <input type="text" class="mt-1 block w-full rounded border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 description" required>
                         </div>
-                        <button type="button" class="remove-order-item btn btn-danger">Remove</button>
+                        <button type="button" class="remove-order-item px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Supprimer</button>
                     </div>
                 `;
             index++;

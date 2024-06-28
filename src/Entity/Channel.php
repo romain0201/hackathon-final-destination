@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ChannelRepository;
+use App\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
