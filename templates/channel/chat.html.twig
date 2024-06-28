@@ -61,13 +61,29 @@
             <div class="flex items-center pt-0">
                 <form id="form" class="flex items-center justify-center w-full space-x-2">
                     <input
+                        {% if is_granted("ROLE_ADMIN") and channel.lock  %}
+                            disabled
+                        {% endif %}
                         class="flex h-10 w-full rounded-md border border-[#e5e7eb] px-3 py-2 text-sm placeholder-[#6b7280] focus:outline-none focus:ring-2 focus:ring-[#9ca3af] disabled:cursor-not-allowed disabled:opacity-50 text-[#030712] focus-visible:ring-offset-2"
                         placeholder="Entrez votre message"
                         id="message">
                     <button
-                        class="inline-flex items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
+                        {% if is_granted("ROLE_ADMIN") and channel.lock %}
+                            disabled
+                        {% endif %}
+                        class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-black hover:bg-[#111827E6] h-10 px-4 py-2"
                         id="submit">
+                        {% if is_granted("ROLE_ADMIN") and channel.lock %}
+                            <i class="fa-solid fa-lock"></i>
+                        {% endif %}
                         Envoyer</button>
+                    {% if is_granted("ROLE_ADMIN") and channel.lock %}
+                        <a
+                            href="{{ path('app_unlock_chat', {id: channel.id}) }}"
+                            class="flex gap-3 items-center justify-center rounded-md text-sm font-medium text-[#f9fafb] disabled:pointer-events-none disabled:opacity-50 bg-orange-500 h-10 px-4 py-2">
+                            <i class="fa-solid fa-lock-open"></i>
+                        </a>
+                    {% endif %}
                 </form>
             </div>
         </div>

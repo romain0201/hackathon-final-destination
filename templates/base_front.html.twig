@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}User Hackathon{% endblock %}</title>
@@ -7,8 +7,18 @@
             rel="icon"
             href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>"
         />
+        <<<<<<< HEAD
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        {% block stylesheets %}
+        =======
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+            integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+
+        >>>>>>> main {% block stylesheets %}
         {{
             encore_entry_link_tags("app")
         }}
@@ -34,6 +44,7 @@
                     <button
                         type="button"
                         class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+                        id="openMenuButton"
                     >
                         <span class="sr-only">Open main menu</span>
                         <svg
@@ -59,12 +70,29 @@
                     <p class="text-sm font-semibold leading-6 text-gray-900">
                         Bonjour {{ app.user.name }}
                     </p>
+                    {% if is_granted("ROLE_ADMIN") %}
+                    <a
+                        href="{{ path('app_admin_home') }}"
+                        class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                    >
+                        Panneau d'administration
+                    </a>
+                    {% elseif is_granted("ROLE_PHARMACIEN") %}
                     <a
                         href=""
                         class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
                     >
+                        Les commandes
+                    </a>
+                    {% else %}
+                    <a
+                        href="{{ path('channel', { id: app.user.id }) }}"
+                        class="text-sm font-semibold leading-6 ml-3 bg-zinc-500 rounded-md px-3 py-1.5 text-white"
+                    >
                         Mes conversations
                     </a>
+                    {% endif %}
+
                     <a
                         href="{{ path('app_logout') }}"
                         class="text-sm font-semibold leading-6 ml-3 bg-amber-500 rounded-md px-3 py-1.5 text-white"
@@ -85,7 +113,8 @@
                 <!-- Background backdrop, show/hide based on slide-over state. -->
                 <div class="fixed inset-0 z-10"></div>
                 <div
-                    class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+                    id="mobileMenu"
+                    class="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 hidden"
                 >
                     <div class="flex items-center justify-between">
                         <a href="#" class="-m-1.5 p-1.5">
@@ -99,6 +128,7 @@
                         <button
                             type="button"
                             class="-m-2.5 rounded-md p-2.5 text-gray-700"
+                            id="closeMenuButton"
                         >
                             <span class="sr-only">Close menu</span>
                             <svg
@@ -144,9 +174,32 @@
             {% block body %}{% endblock %}
         </main>
 
-        {% block javascripts %} {% block importmap %} {{ importmap("app") }} {%
-        endblock %}
+        <<<<<<< HEAD {% block javascripts %} {% block importmap %}
+        {{ importmap("app") }} {% endblock %}
         {{ encore_entry_script_tags("app") }}
-        {% endblock %}
+        ======= {% block javascripts %} {% block importmap %}
+        {{ importmap("app") }} {% endblock %}
+        {{ encore_entry_script_tags("app") }}
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const openMenuButton =
+                    document.getElementById("openMenuButton");
+                const closeMenuButton =
+                    document.getElementById("closeMenuButton");
+                const mobileMenu = document.getElementById("mobileMenu");
+
+                openMenuButton.addEventListener("click", function () {
+                    mobileMenu.classList.add("block");
+                    mobileMenu.classList.remove("hidden");
+                });
+
+                closeMenuButton.addEventListener("click", function () {
+                    mobileMenu.classList.add("hidden");
+                    mobileMenu.classList.remove("block");
+                });
+            });
+        </script>
+        >>>>>>> main {% endblock %}
     </body>
 </html>
