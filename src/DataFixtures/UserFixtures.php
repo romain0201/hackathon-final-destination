@@ -35,7 +35,7 @@ class UserFixtures extends Fixture
         $pharmacie->setEmail('pharmacie@hackathon.fr');
         $pharmacie->setName('Pharmacie');
         $pharmacie->setPassword('$2y$13$oza8661olib/vMDnEBIA/eMRR9HeP2UQMLK/qcb3c1vhFb56HeUau');
-        $pharmacie->setRoles(['ROLE_PHARMACIEN']);
+        $pharmacie->setRoles(['ROLE_PHARMACY']);
         $pharmacie->setVerified(true);
 
         $manager->persist($ia);
@@ -45,4 +45,3 @@ class UserFixtures extends Fixture
         $manager->flush();
     }
 }
-        
