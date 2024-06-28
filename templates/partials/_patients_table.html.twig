@@ -6,14 +6,9 @@
                 <p class="mt-2 text-sm text-gray-700">Liste des patients en cours de suivi.</p>
             </div>
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex items-center gap-2">
-                <button type="button" class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600" onclick="window.location.href='https://localhost/order/new';">Créer une ordonnance</button>
-                <button type="button" class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600">Enrôler un patient</button>
-                <button type="button" class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600">Importer un fichier</button>
+                <a class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600" href="{{ path('app_order_new') }}">Créer une ordonnance</a>
+                <a class="block rounded-md bg-amber-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600" href="{{ path('app_order_index') }}">Voir les ordonnances</a>
             </div>
-        </div>
-
-        <div>
-            <button class="text-white bg-amber-600 rounded-md px-6 py-1.5">Mettre en place un filtre</button>
         </div>
 
         <div class="mt-8 flow-root">

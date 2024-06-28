@@ -49,10 +49,10 @@
                     <ul class="flex items-center gap-8">
                         <li>
                             <a
-                                href="#"
+                                href="{{ path("app_admin_home") }}"
                                 class="{{
                                     app.request.attributes.get('_route') ==
-                                    'app_home'
+                                    'app_admin_home'
                                         ? 'text-orange-500'
                                         : ''
                                 }}"
@@ -88,7 +88,7 @@
                                 href="{{ path('app_statistiques') }}"
                                 class="{{
                                     app.request.attributes.get('_route') ==
-                                    'app_statistics'
+                                    'app_statistiques'
                                         ? 'text-orange-500'
                                         : ''
                                 }}"
@@ -110,14 +110,8 @@
                         </li>
                         <li>
                             <a
-                                href="#"
-                                class="{{
-                                    app.request.attributes.get('_route') ==
-                                    'app_authorizations'
-                                        ? 'text-orange-500'
-                                        : ''
-                                }}"
-                                >Autorisations</a
+                                href="{{ path('app_logout') }}"
+                                >Déconnexion</a
                             >
                         </li>
                     </ul>
