@@ -62,20 +62,24 @@ const Chat = () => {
 
     const leaveChat = () => {
         if (room) {
-            [...room.participants.values(), room.localParticipant].forEach(participant => {
+            const allParticipants = [...room.participants.values(), room.localParticipant];
+            allParticipants.forEach(participant => {
                 participant.tracks.forEach(publication => {
                     if (publication.track) {
                         publication.track.stop();
-                        publication.track.detach().forEach(element => {
-                            element.remove();
-                        });
+                        const attachedElements = publication.track.detach();
+                        attachedElements.forEach(element => element.remove());
                     }
                 });
             });
 
-            room.disconnect(); // Déconnecter de la salle
+            room.disconnect();
             setRoom(null);
             setHasJoinedRoom(false);
+
+            const videoChatWindow = document.getElementById('video-chat-window');
+            videoChatWindow.innerHTML = '';
+
             console.log("Disconnected from the Room");
         }
     };
