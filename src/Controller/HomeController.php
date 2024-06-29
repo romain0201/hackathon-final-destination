@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\SymptomUser;
+use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,5 +35,28 @@ class HomeController extends AbstractController
             'users' => $patient,
             'urlForMercure' => $request->getUri() . 'symptomAfterAnalyse'
         ]);
+    }
+
+    #[Route('/admin/patient/{id}', name: 'app_admin_patient')]
+    public function patientRecord(User $user): Response
+    {
+        $symptoms = $user->getSymptomUsers();
+
+        return $this->render('back/home/patient.html.twig', [
+            'symptoms' => $symptoms,
+            'patient' => $user
+        ]);
+    }
+
+    #[Route('/admin/patient/update/{id}', name: 'app_admin_patient_update')]
+    public function updatePatientRecord(SymptomUser $symptomUser, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $route = $request->headers->get('referer');
+
+        $symptomUser->setArchived(true);
+        $entityManager->persist($symptomUser);
+        $entityManager->flush();
+
+        return $this->redirect($route);
     }
 }

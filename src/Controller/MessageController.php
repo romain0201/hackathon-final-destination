@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
+use App\Entity\SymptomUser;
 use App\Repository\ChannelRepository;
 use App\Repository\MessageRepository;
 use App\Repository\SymptomRepository;
@@ -266,14 +267,15 @@ class MessageController extends AbstractController
         if (preg_match("/\boui\b/i", $responseAfterAnalyse['response']))
             if (preg_match_all("/\b-?\d+(\.\d+)?\b/", $responseAfterAnalyse['response'], $matches))
                 if ($symptomRepository->find($matches[0][0])) {
-                    $user = $userRepository->find($this->getUser());
-                    $user->addSymptom($symptomRepository->find($matches[0][0]));
+                    $symptomUser = new SymptomUser();
+                    $symptomUser->setPatient($userRepository->find($this->getUser()));
+                    $symptomUser->setSymptom($symptomRepository->find($matches[0][0]));
 
-                    $em->persist($user);
+                    $em->persist($symptomUser);
                     $em->flush();
 
                     if ($symptomRepository->find($matches[0][0])->isActive()) {
-                        $jsonSymptom = $serializer->serialize($user, 'json', [
+                        $jsonSymptom = $serializer->serialize($symptomUser, 'json', [
                             'groups' => ['symptom']
                         ]);
 

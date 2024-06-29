@@ -1,0 +1,49 @@
+{% extends 'base_back.html.twig' %}
+
+{% block body %}
+    <div class="w-full">
+        <div class="overflow-x-auto pb-2">
+            <div class="px-4 sm:px-6 lg:px-8">
+                <div class="sm:flex sm:items-center mb-6">
+                    <div class="sm:flex-auto">
+                        <h1 class="text-base font-semibold leading-6 text-gray-900">Listes des symptômes de {{ patient.name }}</h1>
+                        <p class="mt-2 text-sm text-gray-700">Suivi des symptômes actifs et passés du patient.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 flow-root">
+                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                            <table class="min-w-full divide-y divide-gray-300">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Nom du symptôme</th>
+                                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">
+                                        <span class="sr-only">Édition</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                {% for symptom in symptoms %}
+                                    <tr class="even:bg-gray-50">
+                                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ symptom.symptom.name }}</td>
+                                        <td>
+                                            {% if symptom.archived is null %}
+                                            <a href="{{ path('app_admin_patient_update', {id: symptom.id}) }}" class="text-green-500">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </a>
+                                            {% else %}
+                                                <i class="fa-solid fa-box-archive"></i>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
