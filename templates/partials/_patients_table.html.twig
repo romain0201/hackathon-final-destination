@@ -36,8 +36,8 @@
                             <tr class="even:bg-gray-50">
                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 flex items-center gap-3">
                                     {% set break = false %}
-                                    {% for symptom in user.symptoms %}
-                                        {% if not break and symptom.isActive %}
+                                    {% for symptomUser in user.symptomUsers %}
+                                        {% if not break and symptomUser.symptom.isActive and symptomUser.isArchived is null %}
                                             <span class="w-5 h-5 bg-red-500 rounded-full"></span>
                                             {% set break = true %}
                                         {% endif %}
@@ -55,8 +55,8 @@
                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">001002003</td>
                                 <td class="flex items-center justify-between">
                                     {% set break = false %}
-                                    {% for symptom in user.symptoms %}
-                                        {% if not break and symptom.isActive %}
+                                    {% for symptomUser in user.symptomUsers %}
+                                        {% if not break and symptomUser.symptom.isActive and symptomUser.isArchived is null %}
                                             {% if user.phone %}
                                                 <a href="tel:{{ user.phone }}" class="text-green-600">
                                                     <i class="fa-solid fa-phone"></i>
@@ -73,6 +73,9 @@
                                     </a>
                                     <a href="{{ path('app_sms', {'id': user.id}) }}" class="text-red-600">
                                         <i class="fa-solid fa-comment-sms"></i>
+                                    </a>
+                                    <a href="{{ path('app_admin_patient', {'id': user.id}) }}" class="text-cyan-600">
+                                        <i class="fa-solid fa-receipt"></i>
                                     </a>
                                 </td>
                             </tr>

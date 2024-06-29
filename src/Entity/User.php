@@ -73,13 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     /**
-     * @var Collection<int, Symptom>
-     */
-    #[ORM\ManyToMany(targetEntity: Symptom::class, mappedBy: 'patient')]
-    #[Groups(['symptom'])]
-    private Collection $symptoms;
-
-    /**
      * @var Collection<int, Order>
      */
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'client')]
@@ -88,12 +81,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $odp = null;
 
+    /**
+     * @var Collection<int, SymptomUser>
+     */
+    #[ORM\OneToMany(targetEntity: SymptomUser::class, mappedBy: 'patient')]
+    private Collection $symptomUsers;
+
     public function __construct()
     {
         $this->messages = new ArrayCollection();
         $this->channels = new ArrayCollection();
-        $this->symptoms = new ArrayCollection();
         $this->orders = new ArrayCollection();
+        $this->symptomUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -256,33 +255,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Symptom>
-     */
-    public function getSymptoms(): Collection
-    {
-        return $this->symptoms;
-    }
-
-    public function addSymptom(Symptom $symptom): static
-    {
-        if (!$this->symptoms->contains($symptom)) {
-            $this->symptoms->add($symptom);
-            $symptom->addPatient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSymptom(Symptom $symptom): static
-    {
-        if ($this->symptoms->removeElement($symptom)) {
-            $symptom->removePatient($this);
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Order>
      */
     public function getOrders(): Collection
@@ -320,6 +292,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOdp(?string $odp): static
     {
         $this->odp = $odp;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SymptomUser>
+     */
+    public function getSymptomUsers(): Collection
+    {
+        return $this->symptomUsers;
+    }
+
+    public function addSymptomUser(SymptomUser $symptomUser): static
+    {
+        if (!$this->symptomUsers->contains($symptomUser)) {
+            $this->symptomUsers->add($symptomUser);
+            $symptomUser->setPatient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSymptomUser(SymptomUser $symptomUser): static
+    {
+        if ($this->symptomUsers->removeElement($symptomUser)) {
+            // set the owning side to null (unless already changed)
+            if ($symptomUser->getPatient() === $this) {
+                $symptomUser->setPatient(null);
+            }
+        }
 
         return $this;
     }

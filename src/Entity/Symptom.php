@@ -29,14 +29,15 @@ class Symptom
     private ?bool $isActive = null;
 
     /**
-     * @var Collection<int, User>
+     * @var Collection<int, SymptomUser>
      */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'symptoms')]
-    private Collection $patient;
+    #[ORM\OneToMany(targetEntity: SymptomUser::class, mappedBy: 'symptom')]
+    #[Groups(['symptom'])]
+    private Collection $symptomUsers;
 
     public function __construct()
     {
-        $this->patient = new ArrayCollection();
+        $this->symptomUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,25 +82,31 @@ class Symptom
     }
 
     /**
-     * @return Collection<int, User>
+     * @return Collection<int, SymptomUser>
      */
-    public function getPatient(): Collection
+    public function getSymptomUsers(): Collection
     {
-        return $this->patient;
+        return $this->symptomUsers;
     }
 
-    public function addPatient(User $patient): static
+    public function addSymptomUser(SymptomUser $symptomUser): static
     {
-        if (!$this->patient->contains($patient)) {
-            $this->patient->add($patient);
+        if (!$this->symptomUsers->contains($symptomUser)) {
+            $this->symptomUsers->add($symptomUser);
+            $symptomUser->setSymptom($this);
         }
 
         return $this;
     }
 
-    public function removePatient(User $patient): static
+    public function removeSymptomUser(SymptomUser $symptomUser): static
     {
-        $this->patient->removeElement($patient);
+        if ($this->symptomUsers->removeElement($symptomUser)) {
+            // set the owning side to null (unless already changed)
+            if ($symptomUser->getSymptom() === $this) {
+                $symptomUser->setSymptom(null);
+            }
+        }
 
         return $this;
     }
