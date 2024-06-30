@@ -18,7 +18,8 @@
 3. **Système de Chatbot**
 
     - Chatbot intégré pour recueillir des informations post-opératoires.
-    - Enregistrement et analyse des messages des patients.
+    - Enregistrement et analyse des messages et photos des patients.
+    - Dialogue entre l'IA et le patient sur sa problématique. 
     - Possibilité pour les médecins de reprendre la conversation à tout moment à la place de l'IA.
 
 4. **Gestion des Symptômes**
@@ -37,7 +38,8 @@
 
     - Système d'upload des ordonnances.
     - Ajout de commentaires liés aux ordonnances.
-    - Passage de commandes de médicaments.
+    - Passage de commandes de médicaments chez le pharmacien du patient.
+    - Réception de SMS par le patient pour récupérer sa commnande (Click & Collect).
     - Analyse des images pour détecter les blessures ou autres pathologies.
 
 7. **Intégration IA**
