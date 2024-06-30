@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Repository\SymptomUserRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,13 +22,15 @@ class GenerateStatisticsCommand extends Command
 {
     private $messageRepository;
     private $symptomRepository;
+    private $symptomsUserRepository;
     private $openaiService;
     private $entityManager;
 
-    public function __construct(MessageRepository $messageRepository, SymptomRepository $symptomRepository, OpenAiService $openaiService, EntityManagerInterface $entityManager)
+    public function __construct(MessageRepository $messageRepository, SymptomRepository $symptomRepository, SymptomUserRepository $symptomUserRepository, OpenAiService $openaiService, EntityManagerInterface $entityManager)
     {
         $this->messageRepository = $messageRepository;
         $this->symptomRepository = $symptomRepository;
+        $this->symptomsUserRepository = $symptomUserRepository;
         $this->openaiService = $openaiService;
         $this->entityManager = $entityManager;
 
@@ -47,6 +50,7 @@ class GenerateStatisticsCommand extends Command
         // Global statistics
         $messages = $this->messageRepository->findAll();
         $symptoms = $this->symptomRepository->findAll();
+        $symptomsUser = $this->symptomsUserRepository->findAll();
 
         $data = [
             'messages' => array_map(function ($message) {
@@ -56,31 +60,29 @@ class GenerateStatisticsCommand extends Command
                     'author' => $message->getAuthor()->getId(),
                 ];
             }, $messages),
-            'symptoms' => array_map(function ($symptom) {
+            'symptoms' => array_map(function ($symptomsUser) {
                 return [
-                    'id' => $symptom->getId(),
-                    'name' => $symptom->getName(),
-                    'patients' => array_map(function ($patient) {
-                        return $patient->getId();
-                    }, $symptom->getPatient()->toArray()),
+                    'id' => $symptomsUser->getId(),
+                    'name' => $symptomsUser->getSymptom()->getName(),
+                    'patients' => $symptomsUser->getPatient(),
                 ];
-            }, $symptoms),
+            }, $symptomsUser),
         ];
 
         // Local statistics
         $symptomCount = [];
-        foreach ($symptoms as $symptom) {
-            if (!isset($symptomCount[$symptom->getName()])) {
-                $symptomCount[$symptom->getName()] = 0;
+        foreach ($symptomsUser as $symptom) {
+            if (!isset($symptomCount[$symptom->getSymptom()->getName()])) {
+                $symptomCount[$symptom->getSymptom()->getName()] = 0;
             }
-            $symptomCount[$symptom->getName()] += count($symptom->getPatient());
+            $symptomCount[$symptom->getSymptom()->getName()] += count($symptom->getPatient()->getSymptomUsers());
         }
         arsort($symptomCount);
 
         $numberOfSevereCases = 0;
-        foreach ($symptoms as $symptom) {
-            if ($symptom->isActive() === true) {
-                $numberOfSevereCases += count($symptom->getPatient());
+        foreach ($symptomsUser as $symptom) {
+            if ($symptom->getSymptom()->isActive() === true) {
+                $numberOfSevereCases += count($symptom->getPatient()->getSymptomUsers());
             }
         }
 
@@ -109,7 +111,7 @@ class GenerateStatisticsCommand extends Command
                 ->setData($response['choices'][0]['message']['content']);
                 $this->entityManager->persist($analysis);
 
-                $response['local_statistics'] = $context['local_statistics']; 
+                $response['local_statistics'] = $context['local_statistics'];
                 foreach ($response as $statType => $statData) {
                     $statistic = (new Statistic())
                         ->setType($statType)

@@ -176,7 +176,7 @@ class MessageController extends AbstractController
         $prompt = "Analyse l'image et fait en une conclusion.";
 
         try {
-            $content = $this->ollamaClient->getResponse($prompt, 'llava', $image);
+            $content = $this->ollamaClient->getResponseImage($prompt, 'llava', $image);
         } catch (\Exception $e) {
             return new Response("Erreur: " . $e->getMessage());
         }
