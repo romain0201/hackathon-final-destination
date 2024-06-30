@@ -44,7 +44,7 @@
 
 7. **Intégration IA**
     - Utilisation de Mistral pour l'analyse locale des données.
-    - Traitement des réponses en temps réel.
+    - Traitement des réponses en temps réel et détection des symptômes pour évaluer la criticité de la problèmatique.
 
 ## Installation et Initialisation du Projet
 
