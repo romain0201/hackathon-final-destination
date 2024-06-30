@@ -12,11 +12,14 @@
     - Enregistrement des patients et de leurs informations personnelles.
     - Suivi post-intervention avec un chatbot interactif.
     - Collecte des données sur la santé mentale et physique des patients.
+    - Système de téléconsultation pour les patients en situation d'urgence.
+    - Système d'appel direct (click-to-call) pour les patients.
 
 3. **Système de Chatbot**
 
     - Chatbot intégré pour recueillir des informations post-opératoires.
     - Enregistrement et analyse des messages des patients.
+    - Possibilité pour les médecins de reprendre la conversation à tout moment à la place de l'IA.
 
 4. **Gestion des Symptômes**
 
